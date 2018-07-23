@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jul 23, 2018 at 08:41 PM
+-- Generation Time: Jul 23, 2018 at 08:56 PM
 -- Server version: 5.6.38
 -- PHP Version: 7.2.1
 
@@ -94,12 +94,36 @@ CREATE TABLE `FORNECEDOR` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `FUNCIONARIO`
+--
+
+CREATE TABLE `FUNCIONARIO` (
+  `ID` int(11) NOT NULL,
+  `NOME` varchar(100) NOT NULL,
+  `TELEFONE` varchar(11) NOT NULL,
+  `RG` varchar(10) NOT NULL,
+  `CPF` varchar(11) NOT NULL,
+  `EMAIL` varchar(50) NOT NULL,
+  `ENDERECO` varchar(50) NOT NULL,
+  `NUMERO` varchar(10) NOT NULL,
+  `COMPLEMENTO` varchar(50) NOT NULL,
+  `BAIRRO` varchar(50) NOT NULL,
+  `CIDADE` varchar(100) NOT NULL,
+  `UF` varchar(2) NOT NULL,
+  `CEP` varchar(8) NOT NULL,
+  `OBS` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `MOVIMENTO_CAIXA`
 --
 
 CREATE TABLE `MOVIMENTO_CAIXA` (
   `ID` int(11) NOT NULL,
   `ID_CAIXA` int(11) NOT NULL,
+  `DATA_HORA` datetime NOT NULL,
   `VALOR` double NOT NULL,
   `ENTRADA` tinyint(1) NOT NULL,
   `ID_FUNC_MOV` int(11) NOT NULL,
@@ -147,63 +171,6 @@ CREATE TABLE `SERVICO_AGENDAMENTO` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Indexes for dumped tables
---
-
---
--- Indexes for table `AGENDAMENTO`
---
-ALTER TABLE `AGENDAMENTO`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Indexes for table `CAIXA`
---
-ALTER TABLE `CAIXA`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Indexes for table `CLIENTE`
---
-ALTER TABLE `CLIENTE`
-  ADD PRIMARY KEY (`ID`),
-  ADD UNIQUE KEY `CPF` (`CPF`);
-
---
--- Indexes for table `FORNECEDOR`
---
-ALTER TABLE `FORNECEDOR`
-  ADD PRIMARY KEY (`ID`),
-  ADD UNIQUE KEY `CNPJ` (`CNPJ`);
-
---
--- Indexes for table `MOVIMENTO_CAIXA`
---
-ALTER TABLE `MOVIMENTO_CAIXA`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Indexes for table `PRODUTO`
---
-ALTER TABLE `PRODUTO`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Indexes for table `SERVICO`
---
-ALTER TABLE `SERVICO`
-  ADD PRIMARY KEY (`ID`),
-  ADD UNIQUE KEY `DESCRICAO` (`DESCRICAO`);
-
---
--- Indexes for table `SERVICO_AGENDAMENTO`
---
-ALTER TABLE `SERVICO_AGENDAMENTO`
-  ADD PRIMARY KEY (`ID`),
-  ADD KEY `FK_SERVICO_SERVICO_AGEND` (`ID_SERVICO`),
-  ADD KEY `FK_AGEND_SERVICO_AGEND` (`ID_AGENDAMENTO`);
-
---
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -229,6 +196,12 @@ ALTER TABLE `CLIENTE`
 -- AUTO_INCREMENT for table `FORNECEDOR`
 --
 ALTER TABLE `FORNECEDOR`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `FUNCIONARIO`
+--
+ALTER TABLE `FUNCIONARIO`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
