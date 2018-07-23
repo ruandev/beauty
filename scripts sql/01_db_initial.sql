@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jul 23, 2018 at 05:38 PM
+-- Generation Time: Jul 23, 2018 at 08:41 PM
 -- Server version: 5.6.38
 -- PHP Version: 7.2.1
 
@@ -13,6 +13,20 @@ SET time_zone = "+00:00";
 --
 -- Database: `BEAUTY`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `AGENDAMENTO`
+--
+
+CREATE TABLE `AGENDAMENTO` (
+  `ID` int(11) NOT NULL,
+  `ID_CLIENTE` int(11) NOT NULL,
+  `DATA_HORA` datetime NOT NULL,
+  `OBS` varchar(200) NOT NULL,
+  `ID_FUNC` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -106,9 +120,41 @@ CREATE TABLE `PRODUTO` (
   `OBS` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `SERVICO`
+--
+
+CREATE TABLE `SERVICO` (
+  `ID` int(11) NOT NULL,
+  `DESCRICAO` varchar(50) NOT NULL,
+  `VALOR` double NOT NULL,
+  `OBS` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `SERVICO_AGENDAMENTO`
+--
+
+CREATE TABLE `SERVICO_AGENDAMENTO` (
+  `ID` int(11) NOT NULL,
+  `ID_SERVICO` int(11) NOT NULL,
+  `ID_AGENDAMENTO` int(11) NOT NULL,
+  `OBS` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `AGENDAMENTO`
+--
+ALTER TABLE `AGENDAMENTO`
+  ADD PRIMARY KEY (`ID`);
 
 --
 -- Indexes for table `CAIXA`
@@ -143,8 +189,29 @@ ALTER TABLE `PRODUTO`
   ADD PRIMARY KEY (`ID`);
 
 --
+-- Indexes for table `SERVICO`
+--
+ALTER TABLE `SERVICO`
+  ADD PRIMARY KEY (`ID`),
+  ADD UNIQUE KEY `DESCRICAO` (`DESCRICAO`);
+
+--
+-- Indexes for table `SERVICO_AGENDAMENTO`
+--
+ALTER TABLE `SERVICO_AGENDAMENTO`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `FK_SERVICO_SERVICO_AGEND` (`ID_SERVICO`),
+  ADD KEY `FK_AGEND_SERVICO_AGEND` (`ID_AGENDAMENTO`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `AGENDAMENTO`
+--
+ALTER TABLE `AGENDAMENTO`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `CAIXA`
@@ -174,4 +241,16 @@ ALTER TABLE `MOVIMENTO_CAIXA`
 -- AUTO_INCREMENT for table `PRODUTO`
 --
 ALTER TABLE `PRODUTO`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `SERVICO`
+--
+ALTER TABLE `SERVICO`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `SERVICO_AGENDAMENTO`
+--
+ALTER TABLE `SERVICO_AGENDAMENTO`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
