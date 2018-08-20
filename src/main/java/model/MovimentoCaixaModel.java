@@ -2,10 +2,12 @@ package model;
 
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MovimentoCaixaModel {
@@ -13,8 +15,8 @@ public class MovimentoCaixaModel {
     CaixaModel caixa;
     LocalDateTime dataHoraMovimento;
     Boolean entrada;
+    Double valor;
     String descricao;
     String obs;
-    FuncionarioModel funcionarioAbertura;
-    FuncionarioModel funcionarioFechamento;
+    FuncionarioModel funcionario;
 }
