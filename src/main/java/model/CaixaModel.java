@@ -2,12 +2,12 @@ package model;
 
 import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 
-@Getter
+@Data
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CaixaModel {

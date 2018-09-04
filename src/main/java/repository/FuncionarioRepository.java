@@ -9,7 +9,7 @@ import java.util.List;
 
 public class FuncionarioRepository extends BaseRepository {
 
-    public void save(FuncionarioModel funcionario) throws SQLException {
+    public FuncionarioModel save(FuncionarioModel funcionario) throws SQLException {
         String sql = "insert into FUNCIONARIO (nome, telefone, cpf, endereco, numero, complemento, bairro, cidade, cep, obs, email) values (?,?,?,?,?,?,?,?,?,?,?)";
         preparaComandoSql(sql);
 
@@ -25,7 +25,13 @@ public class FuncionarioRepository extends BaseRepository {
         stmt.setString(10, funcionario.getObs());
         stmt.setString(11, funcionario.getEmail());
 
-        executaFinalizandoConexao();
+        executaComandoSql();
+
+        funcionario.setId(retornaUltimoCodigo());
+
+        finalizaConexao();
+
+        return funcionario;
     }
 
     public void update(FuncionarioModel funcionario) throws SQLException {
@@ -50,7 +56,7 @@ public class FuncionarioRepository extends BaseRepository {
     }
 
     public void delete(FuncionarioModel funcionario) throws SQLException {
-        preparaComandoSql("select * from FUNCIONARIO where id = ?");
+        preparaComandoSql("delete from FUNCIONARIO where id = ?");
         stmt.setLong(1, funcionario.getId());
         executaFinalizandoConexao();
     }

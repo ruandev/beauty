@@ -2,11 +2,11 @@ package model;
 
 import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 @Builder
-@Getter
+@Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ClienteModel extends EnderecoModel {
 

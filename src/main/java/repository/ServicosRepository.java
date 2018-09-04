@@ -9,15 +9,23 @@ import java.util.List;
 
 public class ServicosRepository extends BaseRepository {
 
-    public void save(ServicoModel servico) throws SQLException {
-        String sql = "insert into SERVICO (descricao, valor, obs) values (?,?,?)";
+
+    public ServicoModel save(ServicoModel servico) throws SQLException {
+        String sql = "insert into SERVICOS (descricao, valor, obs) values (?,?,?)";
+
         preparaComandoSql(sql);
 
         stmt.setString(1, servico.getDescricao());
         stmt.setDouble(2, servico.getValor());
         stmt.setString(3, servico.getObs());
 
-        executaFinalizandoConexao();
+        executaComandoSql();
+
+        servico.setId(retornaUltimoCodigo());
+
+        finalizaConexao();
+
+        return servico;
     }
 
     public void update(ServicoModel servico) throws SQLException {
@@ -34,6 +42,7 @@ public class ServicosRepository extends BaseRepository {
 
     public void delete(ServicoModel servicos) throws SQLException {
         preparaComandoSql("select * from SERVICO where id = ?");
+
         stmt.setLong(1, servicos.getId());
         executaFinalizandoConexao();
     }

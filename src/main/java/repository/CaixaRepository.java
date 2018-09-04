@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 public class CaixaRepository extends BaseRepository {
 
-    public void abrirCaixa(CaixaModel caixa) throws SQLException {
+    public CaixaModel abrirCaixa(CaixaModel caixa) throws SQLException {
         String sql = "insert into CAIXA (abertura, valor_inicial, aberto, id_func_abert, obs) values (now(),?,true,?,?)";
         preparaComandoSql(sql);
 
@@ -15,7 +15,13 @@ public class CaixaRepository extends BaseRepository {
         stmt.setLong(2, caixa.getFuncionarioAbertura().getId());
         stmt.setString(3, caixa.getObs());
 
-        executaFinalizandoConexao();
+        executaComandoSql();
+
+        caixa.setId(retornaUltimoCodigo());
+
+        finalizaConexao();
+
+        return caixa;
     }
 
     public void fecharCaixa(CaixaModel caixa) throws SQLException {

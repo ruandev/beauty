@@ -2,10 +2,10 @@ package model;
 
 import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
-@Getter
+@Data
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FornecedorModel extends EnderecoModel {

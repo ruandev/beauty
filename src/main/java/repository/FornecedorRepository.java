@@ -9,8 +9,9 @@ import java.util.List;
 
 public class FornecedorRepository extends BaseRepository {
 
-    public void save(FornecedorModel fornecedor) throws SQLException {
+    public FornecedorModel save(FornecedorModel fornecedor) throws SQLException {
         String sql = "insert into FORNECEDOR (nome_fantasia, cnpj, representante, telefone, email, celular, obs, endereco, numero, complemento, bairro, cidade, cep) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
         preparaComandoSql(sql);
 
         stmt.setString(1, fornecedor.getNomeFantasia());
@@ -27,7 +28,13 @@ public class FornecedorRepository extends BaseRepository {
         stmt.setString(12, fornecedor.getCidade());
         stmt.setString(13, fornecedor.getCep());
 
-        executaFinalizandoConexao();
+        executaComandoSql();
+
+        fornecedor.setId(retornaUltimoCodigo());
+
+        finalizaConexao();
+
+        return fornecedor;
     }
 
     public void update(FornecedorModel fornecedor) throws SQLException {
@@ -54,7 +61,7 @@ public class FornecedorRepository extends BaseRepository {
     }
 
     public void delete(FornecedorModel fornecedor) throws SQLException {
-        preparaComandoSql("select * from FORNECEDOR where id = ?");
+        preparaComandoSql("delete from FORNECEDOR where id = ?");
         stmt.setLong(1, fornecedor.getId());
         executaFinalizandoConexao();
     }

@@ -24,16 +24,20 @@ public class Utils {
     public static LocalDateTime convetTimestampToLocalDateTime(Timestamp dataHora){
         return dataHora.toLocalDateTime();
     }
-    
-     public static LocalDateTime convetDateAndStringHourToLocalDateTime(Date data, String hora){
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        String dataHora = dateFormat.format(data)+" "+hora;
-        System.out.println(dataHora);
-        DateTimeFormatter formatter = new DateTimeFormatterBuilder()
-            .parseStrict()
-            .appendPattern("dd/MM/uuuu HH:mm")
-            .toFormatter()
-            .withResolverStyle(ResolverStyle.STRICT);
-        return LocalDateTime.parse(dataHora, formatter);
+
+     public static LocalDateTime convetDateAndStringHourToLocalDateTime(Date data, String hora) {
+         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+         String dataHora = dateFormat.format(data) + " " + hora;
+         System.out.println(dataHora);
+         DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+                 .parseStrict()
+                 .appendPattern("dd/MM/uuuu HH:mm")
+                 .toFormatter()
+                 .withResolverStyle(ResolverStyle.STRICT);
+         return LocalDateTime.parse(dataHora, formatter);
+     }
+
+    public static Timestamp convetLocalDateTimeToTimestamp(LocalDateTime dataHora){
+        return Timestamp.valueOf(dataHora);
     }
 }

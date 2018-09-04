@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ProdutoRepository extends BaseRepository {
 
-    public void save(ProdutoModel produto) throws SQLException {
+    public ProdutoModel save(ProdutoModel produto) throws SQLException {
         String sql = "insert into PRODUTO (descricao, valor_venda, estoque_atual, obs) values (?,?,?,?)";
         preparaComandoSql(sql);
 
@@ -18,7 +18,13 @@ public class ProdutoRepository extends BaseRepository {
         stmt.setInt(3, produto.getEstoqueAtual());
         stmt.setString(4, produto.getObs());
 
-        executaFinalizandoConexao();
+        executaComandoSql();
+
+        produto.setId(retornaUltimoCodigo());
+
+        finalizaConexao();
+
+        return produto;
     }
 
     public void update(ProdutoModel produto) throws SQLException {
@@ -44,7 +50,7 @@ public class ProdutoRepository extends BaseRepository {
     }
 
     public void delete(ProdutoModel produto) throws SQLException {
-        preparaComandoSql("select * from PRODUTO where id = ?");
+        preparaComandoSql("delete from PRODUTO where id = ?");
         stmt.setLong(1, produto.getId());
         executaFinalizandoConexao();
     }
