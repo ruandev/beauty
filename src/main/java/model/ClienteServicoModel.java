@@ -7,7 +7,7 @@ public class ClienteServicoModel {
     Long id;
     Date dataAgendamento;
     ClienteModel cliente;
-    List<ServicosModel> servicos;
+    List<ServicoModel> servicos;
     Double valorMaoObra;
     String obs;
 }

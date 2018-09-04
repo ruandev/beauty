@@ -10,6 +10,6 @@ import lombok.experimental.FieldDefaults;
 public class ServicosAgendamentoModel {
     Long id;
     AgendamentoModel agendamento;
-    ServicosModel servico;
+    ServicoModel servico;
     String obs;
 }
