@@ -9,23 +9,23 @@ import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import model.FornecedorModel;
-import repository.FornecedorRepository;
+import model.ClienteModel;
+import repository.ClienteRepository;
 
 /**
  *
  * @author skate
  */
-public class JFrameFornecedor extends javax.swing.JFrame {
-    FornecedorModel fornecedor;
-    FornecedorRepository repository;
+public class JFrameCliente extends javax.swing.JFrame {
+    ClienteModel cliente;
+    ClienteRepository repository;
     Long codigo;
     /**
      * Creates new form JFramePrincipal
      */
-    public JFrameFornecedor() {
+    public JFrameCliente() {
         initComponents();
-        repository = new FornecedorRepository();
+        repository = new ClienteRepository();
         btnNovo.setEnabled(false);
         btnExcluir.setEnabled(false);
         preencheConsulta();
@@ -49,15 +49,13 @@ public class JFrameFornecedor extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         campoObservacao = new javax.swing.JTextArea();
-        campoNomeFantasia = new javax.swing.JTextField();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        campoCNPJ = new javax.swing.JFormattedTextField();
+        campoNomeCompleto = new javax.swing.JTextField();
+        campoCPF = new javax.swing.JFormattedTextField();
         campoEmail = new javax.swing.JTextField();
-        campoTelefone = new javax.swing.JTextField();
-        campoRepresentante = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         campoCelular = new javax.swing.JFormattedTextField();
+        jLabel7 = new javax.swing.JLabel();
+        campoRG = new javax.swing.JFormattedTextField();
         jPanel1 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
@@ -76,7 +74,7 @@ public class JFrameFornecedor extends javax.swing.JFrame {
         btnGravar = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Cadastro de Clientes");
         setResizable(false);
 
         abasPanel.setTabPlacement(javax.swing.JTabbedPane.LEFT);
@@ -87,14 +85,14 @@ public class JFrameFornecedor extends javax.swing.JFrame {
         jLabel1.setBackground(new java.awt.Color(0, 153, 204));
         jLabel1.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText(" Nome Fantasia");
+        jLabel1.setText(" Nome Cliente");
         jLabel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel1.setOpaque(true);
 
         jLabel3.setBackground(new java.awt.Color(0, 153, 204));
         jLabel3.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText(" CNPJ");
+        jLabel3.setText(" CPF");
         jLabel3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel3.setOpaque(true);
 
@@ -116,22 +114,8 @@ public class JFrameFornecedor extends javax.swing.JFrame {
         campoObservacao.setRows(5);
         jScrollPane1.setViewportView(campoObservacao);
 
-        jLabel8.setBackground(new java.awt.Color(0, 153, 204));
-        jLabel8.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel8.setText(" Telefone");
-        jLabel8.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-        jLabel8.setOpaque(true);
-
-        jLabel9.setBackground(new java.awt.Color(0, 153, 204));
-        jLabel9.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setText(" Representante");
-        jLabel9.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-        jLabel9.setOpaque(true);
-
         try {
-            campoCNPJ.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##.###.###/####-##")));
+            campoCPF.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.###.###-##")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
@@ -149,78 +133,84 @@ public class JFrameFornecedor extends javax.swing.JFrame {
             ex.printStackTrace();
         }
 
+        jLabel7.setBackground(new java.awt.Color(0, 153, 204));
+        jLabel7.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setText(" RG");
+        jLabel7.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        jLabel7.setOpaque(true);
+
+        try {
+            campoRG.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##.##.##.##-##")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(campoNomeCompleto))
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 593, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(campoCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(campoEmail))
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(campoCelular, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(campoRepresentante))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(campoNomeFantasia))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 593, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(campoCNPJ, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(campoEmail))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(campoTelefone))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(campoCelular, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(campoRG, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(146, Short.MAX_VALUE))
         );
 
-        jPanel2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {campoCNPJ, campoCelular});
+        jPanel2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {campoCPF, campoCelular});
 
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(campoNomeFantasia, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                    .addComponent(campoNomeCompleto, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
-                    .addComponent(campoCNPJ))
+                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(campoRG, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(campoCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(campoEmail, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(campoTelefone, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
-                    .addComponent(campoCelular))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(campoRepresentante, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
+                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(campoCelular, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(75, 75, 75))
+                .addGap(137, 137, 137))
         );
 
         abasPanel.addTab("Cadastro", jPanel2);
@@ -433,31 +423,31 @@ public class JFrameFornecedor extends javax.swing.JFrame {
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        int dialogResult = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir o fornecedor?","Warning",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        int dialogResult = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir o cliente?","Warning",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if(dialogResult == JOptionPane.YES_OPTION){
             try {
-                repository.delete(fornecedor);
+                repository.delete(cliente);
                 this.limparCampos();
-                JOptionPane.showMessageDialog(this, "Fornecedor excluído com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Cliente excluído com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
             } catch (SQLException ex) {
                 System.out.println(ex.getMessage());
-                JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar salvar o Fornecedor", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar salvar o Cliente", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void btnGravarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGravarActionPerformed
-        this.buildFornecedor();
+        this.buildCliente();
         try {
             if(codigo != null){
-                this.repository.update(fornecedor);
+                this.repository.update(cliente);
             } else {
-                this.repository.save(fornecedor);
+                this.repository.save(cliente);
             }
-            JOptionPane.showMessageDialog(this, "Fornecedor salvo com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Cliente salvo com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
-            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar salvar o Fornecedor", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar salvar o Cliente", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnGravarActionPerformed
 
@@ -467,47 +457,45 @@ public class JFrameFornecedor extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tabelaConsultaKeyReleased
 
-    private void buildFornecedor(){
-        fornecedor = FornecedorModel.builder()
+    private void buildCliente(){
+        cliente = ClienteModel.builder()
                 .id(codigo)
-                .nomeFantasia(campoNomeFantasia.getText())
-                .cnpj(campoCNPJ.getText().replaceAll("[^0-9]", ""))
-                .telefone(campoTelefone.getText())
-                .celular(campoCelular.getText().replaceAll("[^0-9]", ""))
+                .nome(campoNomeCompleto.getText())
+                .rg(campoRG.getText().replaceAll("[^0-9]", ""))
+                .cpf(campoCPF.getText().replaceAll("[^0-9]", ""))
+                .telefone(campoCelular.getText().replaceAll("[^0-9]", ""))
                 .email(campoEmail.getText())
-                .representante(campoRepresentante.getText())
                 .obs(campoObservacao.getText())
                 .build();
-        fornecedor.setEndereco(campoLogradouro.getText());
-        fornecedor.setNumero(campoNumero.getText());
-        fornecedor.setBairro(campoBairro.getText());
-        fornecedor.setCidade(campoCidade.getText());
-        fornecedor.setCep(campoCEP.getText().replaceAll("[^0-9]", ""));
+        cliente.setEndereco(campoLogradouro.getText());
+        cliente.setNumero(campoNumero.getText());
+        cliente.setBairro(campoBairro.getText());
+        cliente.setCidade(campoCidade.getText());
+        cliente.setCep(campoCEP.getText().replaceAll("[^0-9]", ""));
     }
     
     private void preencherCampos(){
         try {
             codigo = Long.parseLong(tabelaConsulta.getValueAt(tabelaConsulta.getSelectedRow(), 0).toString());
             abasPanel.setSelectedIndex(0);
-            fornecedor = repository.findOne(FornecedorModel.builder().id(codigo).build());
-            campoNomeFantasia.setText(fornecedor.getNomeFantasia());
-            campoCNPJ.setText(fornecedor.getCnpj());
-            campoTelefone.setText(fornecedor.getTelefone());
-            campoCelular.setText(fornecedor.getCelular());
-            campoEmail.setText(fornecedor.getEmail());
-            campoRepresentante.setText(fornecedor.getRepresentante());
-            campoObservacao.setText(fornecedor.getObs());
-            campoLogradouro.setText(fornecedor.getEndereco());
-            campoNumero.setText(fornecedor.getNumero());
-            campoBairro.setText(fornecedor.getBairro());
-            campoCidade.setText(fornecedor.getCidade());
-            campoCEP.setText(fornecedor.getCep());
+            cliente = repository.findOne(ClienteModel.builder().id(codigo).build());
+            campoNomeCompleto.setText(cliente.getNome());
+            campoRG.setText(cliente.getRg());
+            campoCPF.setText(cliente.getCpf());
+            campoCelular.setText(cliente.getTelefone());
+            campoEmail.setText(cliente.getEmail());
+            campoObservacao.setText(cliente.getObs());
+            campoLogradouro.setText(cliente.getEndereco());
+            campoNumero.setText(cliente.getNumero());
+            campoBairro.setText(cliente.getBairro());
+            campoCidade.setText(cliente.getCidade());
+            campoCEP.setText(cliente.getCep());
             
             btnNovo.setEnabled(true);
             btnExcluir.setEnabled(true);
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
-            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar carregar o Fornecedor", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar carregar o Cliente", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -515,7 +503,7 @@ public class JFrameFornecedor extends javax.swing.JFrame {
         DefaultTableModel model = new DefaultTableModel(
                 new Object[][]{},
                 //aqui a construçao do cabeçalho        
-                new String[]{"CÓD.", "NOME FANTASIA", "CNPJ"}) {
+                new String[]{"CÓD.", "NOME COMPLETO", "CPF"}) {
                     Class[] types = new Class[]{
                         //para cada coluna acrescentar mais um construtor
                         java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
@@ -533,12 +521,12 @@ public class JFrameFornecedor extends javax.swing.JFrame {
                 };
         
         try {
-            for (FornecedorModel fornecedor : repository.findAll()) {
-                model.addRow(new String[]{String.valueOf(fornecedor.getId()), fornecedor.getNomeFantasia(), fornecedor.getCnpj()});
+            for (ClienteModel cliente : repository.findAll()) {
+                model.addRow(new String[]{String.valueOf(cliente.getId()), cliente.getNome(), cliente.getCpf()});
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
-            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar carregar os Fornecedores", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar carregar os Clientees", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
         }
 
         tabelaConsulta.setModel(model);
@@ -554,12 +542,11 @@ public class JFrameFornecedor extends javax.swing.JFrame {
     
     private void limparCampos(){
         codigo = null;
-        campoNomeFantasia.setText(null);
-        campoCNPJ.setText(null);
-        campoTelefone.setText(null);
+        campoNomeCompleto.setText(null);
+        campoRG.setText(null);
+        campoCPF.setText(null);
         campoCelular.setText(null);
         campoEmail.setText(null);
-        campoRepresentante.setText(null);
         campoObservacao.setText(null);
         campoLogradouro.setText(null);
         campoNumero.setText(null);
@@ -588,13 +575,14 @@ public class JFrameFornecedor extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(JFrameFornecedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JFrameCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            new JFrameFornecedor().setVisible(true);
+            new JFrameCliente().setVisible(true);
         });
     }
 
@@ -605,16 +593,15 @@ public class JFrameFornecedor extends javax.swing.JFrame {
     private javax.swing.JButton btnNovo;
     private javax.swing.JTextField campoBairro;
     private javax.swing.JFormattedTextField campoCEP;
-    private javax.swing.JFormattedTextField campoCNPJ;
+    private javax.swing.JFormattedTextField campoCPF;
     private javax.swing.JFormattedTextField campoCelular;
     private javax.swing.JTextField campoCidade;
     private javax.swing.JTextField campoEmail;
     private javax.swing.JTextField campoLogradouro;
-    private javax.swing.JTextField campoNomeFantasia;
+    private javax.swing.JTextField campoNomeCompleto;
     private javax.swing.JTextField campoNumero;
     private javax.swing.JTextArea campoObservacao;
-    private javax.swing.JTextField campoRepresentante;
-    private javax.swing.JTextField campoTelefone;
+    private javax.swing.JFormattedTextField campoRG;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -625,8 +612,7 @@ public class JFrameFornecedor extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

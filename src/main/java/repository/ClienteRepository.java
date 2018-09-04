@@ -61,62 +61,57 @@ public class ClienteRepository extends BaseRepository {
         List<ClienteModel> listCliente = new ArrayList<>();
 
         preparaComandoSql("select * from CLIENTE");
-        ResultSet rs = stmt.executeQuery();
-
-        while (rs.next()) {
-            ClienteModel cliente = ClienteModel.builder()
-                    .id(rs.getLong("id"))
-                    .nome(rs.getString("nome"))
-                    .telefone(rs.getString("telefone"))
-                    .rg(rs.getString("rg"))
-                    .cpf(rs.getString("cpf"))
-                    .obs(rs.getString("obs"))
-                    .email(rs.getString("email"))
-                    .build();
-            cliente.setEndereco(rs.getString("endereco"));
-            cliente.setNumero(rs.getString("numero"));
-            cliente.setComplemento(rs.getString("complemento"));
-            cliente.setBairro(rs.getString("bairro"));
-            cliente.setCidade(rs.getString("cidade"));
-            cliente.setCep(rs.getString("cep"));
-
-            listCliente.add(cliente);
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                ClienteModel cliente = ClienteModel.builder()
+                        .id(rs.getLong("id"))
+                        .nome(rs.getString("nome"))
+                        .telefone(rs.getString("telefone"))
+                        .rg(rs.getString("rg"))
+                        .cpf(rs.getString("cpf"))
+                        .obs(rs.getString("obs"))
+                        .email(rs.getString("email"))
+                        .build();
+                cliente.setEndereco(rs.getString("endereco"));
+                cliente.setNumero(rs.getString("numero"));
+                cliente.setComplemento(rs.getString("complemento"));
+                cliente.setBairro(rs.getString("bairro"));
+                cliente.setCidade(rs.getString("cidade"));
+                cliente.setCep(rs.getString("cep"));
+                
+                listCliente.add(cliente);
+            }
         }
-
-        rs.close();
         finalizaConexao();
 
         return listCliente;
     }
 
-    public ClienteModel findOne(ClienteModel filter)throws SQLException {
-        ClienteModel cliente = null;
+    public ClienteModel findOne(ClienteModel cliente)throws SQLException {
 
         preparaComandoSql("select * from CLIENTE where ID = ?");
 
         stmt.setLong(1, cliente.getId());
 
-        ResultSet rs = stmt.executeQuery();
-
-        while (rs.next()) {
-           cliente = ClienteModel.builder()
-                   .id(rs.getLong("id"))
-                   .nome(rs.getString("nome"))
-                   .telefone(rs.getString("telefone"))
-                   .rg(rs.getString("rg"))
-                   .cpf(rs.getString("cpf"))
-                   .obs(rs.getString("obs"))
-                   .email(rs.getString("email"))
-                   .build();
-           cliente.setEndereco(rs.getString("endereco"));
-           cliente.setNumero(rs.getString("numero"));
-           cliente.setComplemento(rs.getString("complemento"));
-           cliente.setBairro(rs.getString("bairro"));
-           cliente.setCidade(rs.getString("cidade"));
-           cliente.setCep(rs.getString("cep"));
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                cliente = ClienteModel.builder()
+                        .id(rs.getLong("id"))
+                        .nome(rs.getString("nome"))
+                        .telefone(rs.getString("telefone"))
+                        .rg(rs.getString("rg"))
+                        .cpf(rs.getString("cpf"))
+                        .obs(rs.getString("obs"))
+                        .email(rs.getString("email"))
+                        .build();
+                cliente.setEndereco(rs.getString("endereco"));
+                cliente.setNumero(rs.getString("numero"));
+                cliente.setComplemento(rs.getString("complemento"));
+                cliente.setBairro(rs.getString("bairro"));
+                cliente.setCidade(rs.getString("cidade"));
+                cliente.setCep(rs.getString("cep"));
+            }
         }
-
-        rs.close();
         finalizaConexao();
 
         return cliente;
