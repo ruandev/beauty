@@ -1,7 +1,7 @@
 --
 -- Constraints for dumped tables
 --
-
+use beauty;
 --
 -- Constraints for table `AGENDAMENTO`
 --

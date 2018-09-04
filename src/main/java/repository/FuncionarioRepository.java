@@ -1,7 +1,5 @@
 package repository;
 
-import com.sun.javafx.stage.FocusUngrabEvent;
-import model.ClienteModel;
 import model.FuncionarioModel;
 
 import java.sql.ResultSet;
@@ -61,28 +59,26 @@ public class FuncionarioRepository extends BaseRepository {
         List<FuncionarioModel> listCliente = new ArrayList<>();
 
         preparaComandoSql("select * from FUNCIONARIO");
-        ResultSet rs = stmt.executeQuery();
-
-        while (rs.next()) {
-            FuncionarioModel funcionario = FuncionarioModel.builder()
-                    .id(rs.getLong("id"))
-                    .nome(rs.getString("nome"))
-                    .telefone(rs.getString("telefone"))
-                    .cpf(rs.getString("cpf"))
-                    .obs(rs.getString("obs"))
-                    .email(rs.getString("email"))
-                    .build();
-            funcionario.setEndereco(rs.getString("endereco"));
-            funcionario.setNumero(rs.getString("numero"));
-            funcionario.setComplemento(rs.getString("complemento"));
-            funcionario.setBairro(rs.getString("bairro"));
-            funcionario.setCidade(rs.getString("cidade"));
-            funcionario.setCep(rs.getString("cep"));
-
-            listCliente.add(funcionario);
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                FuncionarioModel funcionario = FuncionarioModel.builder()
+                        .id(rs.getLong("id"))
+                        .nome(rs.getString("nome"))
+                        .telefone(rs.getString("telefone"))
+                        .cpf(rs.getString("cpf"))
+                        .obs(rs.getString("obs"))
+                        .email(rs.getString("email"))
+                        .build();
+                funcionario.setEndereco(rs.getString("endereco"));
+                funcionario.setNumero(rs.getString("numero"));
+                funcionario.setComplemento(rs.getString("complemento"));
+                funcionario.setBairro(rs.getString("bairro"));
+                funcionario.setCidade(rs.getString("cidade"));
+                funcionario.setCep(rs.getString("cep"));
+                
+                listCliente.add(funcionario);
+            }
         }
-
-        rs.close();
         finalizaConexao();
 
         return listCliente;

@@ -10,7 +10,7 @@ import java.util.List;
 public class FornecedorRepository extends BaseRepository {
 
     public void save(FornecedorModel fornecedor) throws SQLException {
-        String sql = "insert into FORNECEDOR (nome_fantasia, cnpj, representante, telefone, email, celular, obs, endereco, numero, complemento, bairro, cidade, cep) values (?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "insert into FORNECEDOR (nome_fantasia, cnpj, representante, telefone, email, celular, obs, endereco, numero, complemento, bairro, cidade, cep) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
         preparaComandoSql(sql);
 
         stmt.setString(1, fornecedor.getNomeFantasia());
@@ -63,30 +63,28 @@ public class FornecedorRepository extends BaseRepository {
         List<FornecedorModel> listFornecedor = new ArrayList<>();
 
         preparaComandoSql("select * from FORNECEDOR");
-        ResultSet rs = stmt.executeQuery();
-
-        while (rs.next()) {
-            FornecedorModel fornecedor = FornecedorModel.builder()
-                    .id(rs.getLong("id"))
-                    .nomeFantasia(rs.getString("nome_fantasia"))
-                    .cnpj(rs.getString("cnpj"))
-                    .representante(rs.getString("representante"))
-                    .telefone(rs.getString("telefone"))
-                    .email(rs.getString("email"))
-                    .celular(rs.getString("celular"))
-                    .obs(rs.getString("obs"))
-                    .build();
-            fornecedor.setEndereco(rs.getString("endereco"));
-            fornecedor.setNumero(rs.getString("numero"));
-            fornecedor.setComplemento(rs.getString("complemento"));
-            fornecedor.setBairro(rs.getString("bairro"));
-            fornecedor.setCidade(rs.getString("cidade"));
-            fornecedor.setCep(rs.getString("cep"));
-
-            listFornecedor.add(fornecedor);
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                FornecedorModel fornecedor = FornecedorModel.builder()
+                        .id(rs.getLong("id"))
+                        .nomeFantasia(rs.getString("nome_fantasia"))
+                        .cnpj(rs.getString("cnpj"))
+                        .representante(rs.getString("representante"))
+                        .telefone(rs.getString("telefone"))
+                        .email(rs.getString("email"))
+                        .celular(rs.getString("celular"))
+                        .obs(rs.getString("obs"))
+                        .build();
+                fornecedor.setEndereco(rs.getString("endereco"));
+                fornecedor.setNumero(rs.getString("numero"));
+                fornecedor.setComplemento(rs.getString("complemento"));
+                fornecedor.setBairro(rs.getString("bairro"));
+                fornecedor.setCidade(rs.getString("cidade"));
+                fornecedor.setCep(rs.getString("cep"));
+                
+                listFornecedor.add(fornecedor);
+            }
         }
-
-        rs.close();
         finalizaConexao();
 
         return listFornecedor;
@@ -99,28 +97,26 @@ public class FornecedorRepository extends BaseRepository {
 
         stmt.setLong(1, filter.getId());
 
-        ResultSet rs = stmt.executeQuery();
-
-        while (rs.next()) {
-            fornecedor = FornecedorModel.builder()
-                    .id(rs.getLong("id"))
-                    .nomeFantasia(rs.getString("nome_fantasia"))
-                    .cnpj(rs.getString("cnpj"))
-                    .representante(rs.getString("representante"))
-                    .telefone(rs.getString("telefone"))
-                    .email(rs.getString("email"))
-                    .celular(rs.getString("celular"))
-                    .obs(rs.getString("obs"))
-                    .build();
-            fornecedor.setEndereco(rs.getString("endereco"));
-            fornecedor.setNumero(rs.getString("numero"));
-            fornecedor.setComplemento(rs.getString("complemento"));
-            fornecedor.setBairro(rs.getString("bairro"));
-            fornecedor.setCidade(rs.getString("cidade"));
-            fornecedor.setCep(rs.getString("cep"));
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                fornecedor = FornecedorModel.builder()
+                        .id(rs.getLong("id"))
+                        .nomeFantasia(rs.getString("nome_fantasia"))
+                        .cnpj(rs.getString("cnpj"))
+                        .representante(rs.getString("representante"))
+                        .telefone(rs.getString("telefone"))
+                        .email(rs.getString("email"))
+                        .celular(rs.getString("celular"))
+                        .obs(rs.getString("obs"))
+                        .build();
+                fornecedor.setEndereco(rs.getString("endereco"));
+                fornecedor.setNumero(rs.getString("numero"));
+                fornecedor.setComplemento(rs.getString("complemento"));
+                fornecedor.setBairro(rs.getString("bairro"));
+                fornecedor.setCidade(rs.getString("cidade"));
+                fornecedor.setCep(rs.getString("cep"));
+            }
         }
-
-        rs.close();
         finalizaConexao();
 
         return fornecedor;
