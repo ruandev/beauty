@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class BaseRepository {
 
@@ -14,7 +15,7 @@ public class BaseRepository {
 
     protected void preparaComandoSql(String sql) throws SQLException {
         connection = new Conexao().conectar();
-        stmt = connection.prepareStatement(sql);
+        stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
     }
 
     protected void executaComandoSql() throws SQLException {

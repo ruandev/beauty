@@ -423,7 +423,7 @@ public class JFrameCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        int dialogResult = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir o cliente?","Warning",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        int dialogResult = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir o cliente?","Galera de casa aí, comé que é, meu?",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if(dialogResult == JOptionPane.YES_OPTION){
             try {
                 repository.delete(cliente);
@@ -442,8 +442,13 @@ public class JFrameCliente extends javax.swing.JFrame {
             if(codigo != null){
                 this.repository.update(cliente);
             } else {
-                this.repository.save(cliente);
+                cliente = this.repository.save(cliente);
+                codigo = cliente.getId();
             }
+            this.preencheConsulta();
+            btnNovo.setEnabled(true);
+            btnExcluir.setEnabled(true);
+
             JOptionPane.showMessageDialog(this, "Cliente salvo com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());

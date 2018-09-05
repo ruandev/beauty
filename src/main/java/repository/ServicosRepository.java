@@ -11,7 +11,7 @@ public class ServicosRepository extends BaseRepository {
 
 
     public ServicoModel save(ServicoModel servico) throws SQLException {
-        String sql = "insert into SERVICOS (descricao, valor, obs) values (?,?,?)";
+        String sql = "insert into SERVICO (descricao, valor, obs) values (?,?,?)";
 
         preparaComandoSql(sql);
 
@@ -41,7 +41,7 @@ public class ServicosRepository extends BaseRepository {
     }
 
     public void delete(ServicoModel servicos) throws SQLException {
-        preparaComandoSql("select * from SERVICO where id = ?");
+        preparaComandoSql("delete from SERVICO where id = ?");
 
         stmt.setLong(1, servicos.getId());
         executaFinalizandoConexao();

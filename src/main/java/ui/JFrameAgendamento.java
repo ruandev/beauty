@@ -8,16 +8,22 @@ package ui;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.AgendamentoModel;
 import model.ClienteModel;
 import model.ServicoModel;
+import model.ServicosAgendamentoModel;
+import repository.AgendamentoRepository;
 import repository.ClienteRepository;
+import repository.ServicosAgendamentoRepository;
 import repository.ServicosRepository;
+import utils.Utils;
 
 /**
  *
@@ -25,15 +31,22 @@ import repository.ServicosRepository;
  */
 public class JFrameAgendamento extends javax.swing.JFrame {
     List<ClienteModel> listClientes;
-    List<ServicoModel> listServicos, listServicosSelecionados;
+    List<ServicoModel> listServicos, listServicosSelecionados, listServicosEdicao;
+    private Long codigo;
+    AgendamentoRepository repository;
+    ServicosAgendamentoRepository servicoAgendamentoRepository;
+    AgendamentoModel agendamento;
     /**
      * Creates new form JFrame
      */
     public JFrameAgendamento() {
         initComponents();
+        repository = new AgendamentoRepository();
+        servicoAgendamentoRepository = new ServicosAgendamentoRepository();
+        listServicosSelecionados = new ArrayList<>();
         this.preencheClientes();
         this.preencheServicos();
-        listServicosSelecionados = new ArrayList<>();
+        this.preencheConsulta();
     }
 
     /**
@@ -209,6 +222,11 @@ public class JFrameAgendamento extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tabelaConsulta.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabelaConsultaMouseClicked(evt);
+            }
+        });
         tabelaConsulta.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 tabelaConsultaKeyReleased(evt);
@@ -229,8 +247,8 @@ public class JFrameAgendamento extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 505, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(205, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 672, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(38, Short.MAX_VALUE))
         );
 
         abasPanel.addTab("Consulta", jPanel3);
@@ -291,7 +309,7 @@ public class JFrameAgendamento extends javax.swing.JFrame {
 
     private void tabelaConsultaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelaConsultaKeyReleased
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-//            this.preencherCampos();
+           this.preencherCampos();
         }
     }//GEN-LAST:event_tabelaConsultaKeyReleased
 
@@ -302,28 +320,83 @@ public class JFrameAgendamento extends javax.swing.JFrame {
 
     private void tabelaServicosAgendamentoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelaServicosAgendamentoKeyReleased
         if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
-        listServicosSelecionados.remove(listServicos.stream().filter(s -> s.getId().equals(Long.parseLong(tabelaServicosAgendamento.getValueAt(tabelaServicosAgendamento.getSelectedRow(), 0).toString()))).findFirst().get());
-        this.preencherTabelaServico();
+            int dialogResult = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir o serviço do agendamento?","Galera de casa aí, comé que é, meu",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if(dialogResult == JOptionPane.YES_OPTION){
+                System.out.println("ID Serv: "+tabelaServicosAgendamento.getValueAt(tabelaServicosAgendamento.getSelectedRow(), 0).toString());
+                listServicosSelecionados.removeIf((s -> s.getId().equals(Long.parseLong(tabelaServicosAgendamento.getValueAt(tabelaServicosAgendamento.getSelectedRow(), 0).toString()))));
+                this.preencherTabelaServico();
+            }
         }
     }//GEN-LAST:event_tabelaServicosAgendamentoKeyReleased
 
     private void btnGravarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGravarActionPerformed
         this.buildAgendamento();
-//        try {
-//            if(codigo != null){
-//                this.repository.update(cliente);
-//            } else {
-//                this.repository.save(cliente);
-//            }
-//            JOptionPane.showMessageDialog(this, "Cliente salvo com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
-//        } catch (SQLException ex) {
-//            System.out.println(ex.getMessage());
-//            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar salvar o Cliente", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
-//        }
+        try {
+            if(codigo != null){
+                agendamento.setId(codigo);
+                this.repository.alterarAgendamento(agendamento);
+                if(listServicosEdicao!= null && !listServicosEdicao.isEmpty()){
+                    List<ServicoModel> servicosRemovidos = listServicosEdicao.stream().filter(e -> (listServicosSelecionados.stream().filter(d -> d.getId().equals(e.getId())).count())<1).collect(Collectors.toList());
+                    List<ServicoModel> servicosAdicionados = listServicosSelecionados.stream().filter(e -> (listServicosEdicao.stream().filter(d -> d.getId().equals(e.getId())).count())<1).collect(Collectors.toList());
+                    
+                    servicosRemovidos.forEach(servico -> {
+                    try {
+                        servicoAgendamentoRepository.delete(ServicosAgendamentoModel.builder()
+                                .agendamento(agendamento)
+                                .servico(servico)
+                                .build());
+                    } catch (SQLException ex) {
+                        Logger.getLogger(JFrameAgendamento.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    });
+                    servicosAdicionados.forEach(servico -> {
+                        try {
+                            servicoAgendamentoRepository.save(ServicosAgendamentoModel.builder()
+                                    .agendamento(agendamento)
+                                    .servico(servico)
+                                    .build());
+                        } catch (SQLException ex) {
+                            Logger.getLogger(JFrameAgendamento.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    });
+                } else {
+                    listServicosSelecionados.forEach((servicoSelecionado) -> {
+                        try {
+                            servicoAgendamentoRepository.save(ServicosAgendamentoModel.builder()
+                                    .agendamento(agendamento)
+                                    .servico(servicoSelecionado)
+                                    .build());
+                        } catch (SQLException ex) {
+                            Logger.getLogger(JFrameAgendamento.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    });
+                }
+            } else {
+                agendamento = this.repository.agendar(agendamento);
+                listServicosSelecionados.forEach((servicoSelecionado) -> {
+                    try {
+                        servicoAgendamentoRepository.save(ServicosAgendamentoModel.builder()
+                                .agendamento(agendamento)
+                                .servico(servicoSelecionado)
+                                .build());
+                    } catch (SQLException ex) {
+                        Logger.getLogger(JFrameAgendamento.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                });
+            }
+            this.preencheConsulta();
+            btnNovo.setEnabled(true);
+            btnExcluir.setEnabled(true);
+            
+            JOptionPane.showMessageDialog(this, "Agendamento salvo com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar salvar o Cliente", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnGravarActionPerformed
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
-//        this.limparCampos();
+        this.limparCampos();
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
@@ -340,10 +413,16 @@ public class JFrameAgendamento extends javax.swing.JFrame {
 //        }
     }//GEN-LAST:event_btnExcluirActionPerformed
 
+    private void tabelaConsultaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaConsultaMouseClicked
+        if(evt.getClickCount() == 2){
+            this.preencherCampos();
+        }
+    }//GEN-LAST:event_tabelaConsultaMouseClicked
+
     private void preencheClientes(){
-        ClienteRepository repository = new ClienteRepository();
+        ClienteRepository clienteRepository = new ClienteRepository();
         try {
-            listClientes = repository.findAllCombo();
+            listClientes = clienteRepository.findAllCombo();
             comboCliente.addItem("...");
             listClientes.forEach((clienteUnique) -> {
                 comboCliente.addItem(clienteUnique.getNome());
@@ -354,9 +433,9 @@ public class JFrameAgendamento extends javax.swing.JFrame {
     } 
     
     private void preencheServicos(){
-        ServicosRepository repository = new ServicosRepository();
+        ServicosRepository servicoRepository = new ServicosRepository();
         try {
-            listServicos = repository.findAll();
+            listServicos = servicoRepository.findAll();
             comboServico.addItem("...");
             listServicos.forEach((servicoUnique) -> {
                 comboServico.addItem(servicoUnique.getDescricao());
@@ -387,6 +466,7 @@ public class JFrameAgendamento extends javax.swing.JFrame {
         };
     //construçao do conteudo da tabela........................
     //usando o BD 
+    System.out.println(listServicosSelecionados.size());
     listServicosSelecionados.forEach((servicoSelecionado) -> {
         model.addRow(new Object[]{servicoSelecionado.getId(), servicoSelecionado.getDescricao(),servicoSelecionado.getValor().toString().replace(".", ",")});
     });
@@ -405,11 +485,88 @@ public class JFrameAgendamento extends javax.swing.JFrame {
     }
     
     private void buildAgendamento(){
-        AgendamentoModel agendamento = AgendamentoModel.builder()
+        agendamento = AgendamentoModel.builder()
                 .clienteModel(listClientes.get(comboCliente.getSelectedIndex()-1))
                 .dataHora(utils.Utils.convetDateAndStringHourToLocalDateTime(campoDataHoraAgenda.getDate(), campoHora.getText()))
                 .build();
-        System.out.println(agendamento.toString());
+    }
+    
+    private void limparCampos(){
+        btnNovo.setEnabled(true);
+        btnExcluir.setEnabled(true);
+        listServicosSelecionados = new ArrayList<>();
+        comboCliente.setSelectedIndex(0);
+        comboServico.setSelectedIndex(0);
+        campoDataHoraAgenda.setDate(null);
+        campoHora.setText(null);
+    }
+    
+    private void preencheConsulta(){
+        DefaultTableModel model = new DefaultTableModel(
+            new Object[][] { },
+            //aqui a construçao do cabeçalho        
+            new String [] {"","Cliente","Data"}){
+                Class[] types = new Class[]{
+                //para cada coluna acrescentar mais um construtor
+                    java.lang.Object.class,java.lang.Object.class,java.lang.Object.class,
+        };
+        //para cada coluna acrescentar mais um objetooo...
+        boolean[] canEdit = new boolean[] {false,false,false};
+    
+        public Class getColumnClass(int columnIndex){
+            return types[columnIndex];
+        }
+        public boolean isCellEditable(int rowIndex,int columnIndex){
+            return canEdit[columnIndex];
+        }  
+        };
+        try {
+            repository.findAllAgendamentosFuturos().forEach((agendamentoUnique) -> {
+                model.addRow(new Object[]{agendamentoUnique.getId(), agendamentoUnique.getClienteModel().getNome(),Utils.formatLocalDateTime(agendamentoUnique.getDataHora(), "dd/MM/yyyy HH:mm")});
+            }); 
+        } catch (SQLException ex) {
+            Logger.getLogger(JFrameAgendamento.class.getName()).log(Level.SEVERE, null, ex);
+        }
+     
+     tabelaConsulta.setModel(model);
+     tabelaConsulta.sizeColumnsToFit(10);
+     tabelaConsulta.setRowHeight(20);
+     tabelaConsulta.getColumnModel().getColumn(0).setResizable(false);
+     tabelaConsulta.getColumnModel().getColumn(0).setPreferredWidth(0);
+     tabelaConsulta.getColumnModel().getColumn(0).setMaxWidth(0);
+     tabelaConsulta.getColumnModel().getColumn(0).setMinWidth(0);
+     tabelaConsulta.getColumnModel().getColumn(1).setResizable(false);
+     tabelaConsulta.getColumnModel().getColumn(1).setPreferredWidth(200);
+     tabelaConsulta.getColumnModel().getColumn(2).setResizable(false);
+     tabelaConsulta.getColumnModel().getColumn(2).setPreferredWidth(100);
+    }
+    
+    private void preencherCampos(){
+        abasPanel.setSelectedIndex(0);
+        codigo = Long.parseLong(tabelaConsulta.getValueAt(tabelaConsulta.getSelectedRow(), 0).toString());
+        try {
+            agendamento = repository.findOne(AgendamentoModel.builder().id(codigo).build());
+            comboCliente.setSelectedItem(agendamento.getClienteModel().getNome());
+            Date data = Utils.convertLocalDateTimeToDate(agendamento.getDataHora());
+            campoDataHoraAgenda.setDate(data);
+            int hora = data.getHours();
+            int minuto = data.getMinutes();
+            String horas = (hora < 10 ? "0"+String.valueOf(hora) : String.valueOf(hora));
+            String minutos = (minuto < 10 ? "0"+String.valueOf(minuto) : String.valueOf(minuto));
+            String horaCompleta = horas + ":" + minutos;
+            campoHora.setText(horaCompleta);
+            listServicosSelecionados = new ArrayList<>();
+            servicoAgendamentoRepository.findServicosPorAgendamento(agendamento).forEach((servicoAgend) -> {
+                listServicosSelecionados.add(servicoAgend.getServico());
+            });
+            listServicosEdicao = new ArrayList<>();
+            listServicosEdicao.addAll(listServicosSelecionados);
+            if(!listServicosSelecionados.isEmpty()){
+                this.preencherTabelaServico();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(JFrameAgendamento.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     /**

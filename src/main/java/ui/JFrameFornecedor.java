@@ -433,7 +433,7 @@ public class JFrameFornecedor extends javax.swing.JFrame {
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        int dialogResult = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir o fornecedor?","Warning",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        int dialogResult = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir o fornecedor?","Galera de casa aí, comé que é, meu",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if(dialogResult == JOptionPane.YES_OPTION){
             try {
                 repository.delete(fornecedor);
@@ -452,8 +452,12 @@ public class JFrameFornecedor extends javax.swing.JFrame {
             if(codigo != null){
                 this.repository.update(fornecedor);
             } else {
-                this.repository.save(fornecedor);
+                fornecedor = this.repository.save(fornecedor);
+                codigo = fornecedor.getId();
             }
+            this.preencheConsulta();
+            btnNovo.setEnabled(true);
+            btnExcluir.setEnabled(true);
             JOptionPane.showMessageDialog(this, "Fornecedor salvo com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());

@@ -40,4 +40,15 @@ public class Utils {
     public static Timestamp convetLocalDateTimeToTimestamp(LocalDateTime dataHora){
         return Timestamp.valueOf(dataHora);
     }
+    
+    public static String formatLocalDateTime(LocalDateTime dataHora, String format) {
+         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+         return dataHora.format(formatter);
+     }
+    
+    public static Date convertLocalDateTimeToDate(LocalDateTime dateToConvert) {
+        return Date
+                .from(dateToConvert.atZone(ZoneId.systemDefault())
+                .toInstant());
+    }
 }
