@@ -3,14 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ui;
+package ui.cadatros;
 
+import com.mysql.cj.util.StringUtils;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.ClienteModel;
 import repository.ClienteRepository;
+import utils.Mascaras;
 
 /**
  *
@@ -56,6 +58,7 @@ public class JFrameCliente extends javax.swing.JFrame {
         campoCelular = new javax.swing.JFormattedTextField();
         jLabel7 = new javax.swing.JLabel();
         campoRG = new javax.swing.JFormattedTextField();
+        jLabel2 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
@@ -67,6 +70,7 @@ public class JFrameCliente extends javax.swing.JFrame {
         campoCidade = new javax.swing.JTextField();
         campoLogradouro = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tabelaConsulta = new javax.swing.JTable();
@@ -85,7 +89,7 @@ public class JFrameCliente extends javax.swing.JFrame {
         jLabel1.setBackground(new java.awt.Color(0, 153, 204));
         jLabel1.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText(" Nome Cliente");
+        jLabel1.setText(" Nome Cliente*");
         jLabel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel1.setOpaque(true);
 
@@ -120,10 +124,16 @@ public class JFrameCliente extends javax.swing.JFrame {
             ex.printStackTrace();
         }
 
+        campoEmail.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                campoEmailFocusLost(evt);
+            }
+        });
+
         jLabel12.setBackground(new java.awt.Color(0, 153, 204));
         jLabel12.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel12.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel12.setText(" Celular");
+        jLabel12.setText(" Celular*");
         jLabel12.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel12.setOpaque(true);
 
@@ -145,6 +155,10 @@ public class JFrameCliente extends javax.swing.JFrame {
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+
+        jLabel2.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 0, 0));
+        jLabel2.setText("Campos com * são obrigatórios");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -177,7 +191,8 @@ public class JFrameCliente extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(campoRG, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(campoRG, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel2))
                 .addContainerGap(146, Short.MAX_VALUE))
         );
 
@@ -210,7 +225,9 @@ public class JFrameCliente extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(137, 137, 137))
+                .addGap(101, 101, 101)
+                .addComponent(jLabel2)
+                .addContainerGap())
         );
 
         abasPanel.addTab("Cadastro", jPanel2);
@@ -220,21 +237,21 @@ public class JFrameCliente extends javax.swing.JFrame {
         jLabel4.setBackground(new java.awt.Color(0, 153, 204));
         jLabel4.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel4.setText(" Número");
+        jLabel4.setText(" Número*");
         jLabel4.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel4.setOpaque(true);
 
         jLabel10.setBackground(new java.awt.Color(0, 153, 204));
         jLabel10.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel10.setText(" Cidade");
+        jLabel10.setText(" Cidade*");
         jLabel10.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel10.setOpaque(true);
 
         jLabel11.setBackground(new java.awt.Color(0, 153, 204));
         jLabel11.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel11.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel11.setText(" Bairro");
+        jLabel11.setText(" Bairro*");
         jLabel11.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel11.setOpaque(true);
 
@@ -254,9 +271,13 @@ public class JFrameCliente extends javax.swing.JFrame {
         jLabel14.setBackground(new java.awt.Color(0, 153, 204));
         jLabel14.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel14.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel14.setText(" Logradouro");
+        jLabel14.setText(" Logradouro*");
         jLabel14.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel14.setOpaque(true);
+
+        jLabel8.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 0, 0));
+        jLabel8.setText("Campos com * são obrigatórios");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -266,29 +287,34 @@ public class JFrameCliente extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(campoCidade))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(campoLogradouro))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(campoNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(campoCidade))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(campoCEP, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                                .addComponent(campoLogradouro))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(campoNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(campoCEP, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(campoBairro, javax.swing.GroupLayout.DEFAULT_SIZE, 662, Short.MAX_VALUE)))
+                        .addGap(77, 77, 77))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(campoBairro, javax.swing.GroupLayout.DEFAULT_SIZE, 662, Short.MAX_VALUE)))
-                .addGap(77, 77, 77))
+                        .addComponent(jLabel8)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -313,7 +339,9 @@ public class JFrameCliente extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(campoCidade, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
-                .addGap(270, 270, 270))
+                .addGap(237, 237, 237)
+                .addComponent(jLabel8)
+                .addContainerGap())
         );
 
         abasPanel.addTab("Endereço", jPanel1);
@@ -359,6 +387,7 @@ public class JFrameCliente extends javax.swing.JFrame {
 
         btnNovo.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 18)); // NOI18N
         btnNovo.setText("Novo");
+        btnNovo.setEnabled(false);
         btnNovo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNovoActionPerformed(evt);
@@ -375,6 +404,7 @@ public class JFrameCliente extends javax.swing.JFrame {
 
         btnExcluir.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 18)); // NOI18N
         btnExcluir.setText("Excluir");
+        btnExcluir.setEnabled(false);
         btnExcluir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExcluirActionPerformed(evt);
@@ -437,20 +467,30 @@ public class JFrameCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void btnGravarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGravarActionPerformed
-        this.buildCliente();
         try {
-            if(codigo != null){
-                this.repository.update(cliente);
+            this.buildCliente();
+            if(StringUtils.isNullOrEmpty(cliente.getNome()) || StringUtils.isNullOrEmpty(cliente.getTelefone())
+                    || StringUtils.isNullOrEmpty(cliente.getEndereco()) || StringUtils.isNullOrEmpty(cliente.getNumero())
+                    || StringUtils.isNullOrEmpty(cliente.getBairro()) || StringUtils.isNullOrEmpty(cliente.getCidade())){
+                JOptionPane.showMessageDialog(this, "Todos os campos com * (asterisco) são obrigatórios!", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+            } else if(!StringUtils.isNullOrEmpty(cliente.getEmail())){
+                if(Mascaras.testaEmail(cliente.getEmail())){
+                    JOptionPane.showMessageDialog(this, "Preencha o campo Email com um email válido !", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+                }
             } else {
-                cliente = this.repository.save(cliente);
-                codigo = cliente.getId();
-            }
-            this.preencheConsulta();
-            btnNovo.setEnabled(true);
-            btnExcluir.setEnabled(true);
+                if(codigo != null){
+                    this.repository.update(cliente);
+                } else {
+                    cliente = this.repository.save(cliente);
+                    codigo = cliente.getId();
+                }
+                this.preencheConsulta();
+                btnNovo.setEnabled(true);
+                btnExcluir.setEnabled(true);
 
-            JOptionPane.showMessageDialog(this, "Cliente salvo com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
-        } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "Cliente salvo com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (Exception ex) {
             System.out.println(ex.getMessage());
             JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar salvar o Cliente", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
         }
@@ -461,6 +501,14 @@ public class JFrameCliente extends javax.swing.JFrame {
             this.preencherCampos();
         }
     }//GEN-LAST:event_tabelaConsultaKeyReleased
+
+    private void campoEmailFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_campoEmailFocusLost
+        if(Mascaras.testaEmail(campoEmail.getText())){
+            System.out.println("valor válido");
+        } else {
+            System.out.println("valor inválido");
+        }
+    }//GEN-LAST:event_campoEmailFocusLost
 
     private void buildCliente(){
         cliente = ClienteModel.builder()
@@ -526,12 +574,12 @@ public class JFrameCliente extends javax.swing.JFrame {
                 };
         
         try {
-            for (ClienteModel cliente : repository.findAll()) {
-                model.addRow(new String[]{String.valueOf(cliente.getId()), cliente.getNome(), cliente.getCpf()});
-            }
+            repository.findAll().forEach((clienteUnique) -> {
+                model.addRow(new String[]{String.valueOf(clienteUnique.getId()), clienteUnique.getNome(), clienteUnique.getCpf()});
+            });
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
-            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar carregar os Clientees", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar carregar os Clientes", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
         }
 
         tabelaConsulta.setModel(model);
@@ -613,11 +661,13 @@ public class JFrameCliente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

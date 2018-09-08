@@ -1,56 +1,94 @@
 package repository;
 
 import model.CaixaModel;
-import model.FuncionarioModel;
 import model.MovimentoCaixaModel;
 import utils.Utils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import utils.VariaveisEstaticas;
 
 public class MovimentoCaixaRepository extends BaseRepository {
 
     public void inserirMovimentoCaixa(MovimentoCaixaModel movimento) throws SQLException {
-        String sql = "insert into MOVIMENTO_CAIXA (id_caixa, data_hora, valor, entrada, id_func_mov, obs) values (?,now(),?,?,?,?)";
+        String sql = "insert into MOVIMENTO_CAIXA (id_caixa, data_hora, descricao, valor, entrada, obs) values (?,now(),?,?,?,?)";
 
         preparaComandoSql(sql);
 
         stmt.setLong(1, movimento.getCaixa().getId());
         stmt.setDouble(2, movimento.getValor());
-        stmt.setBoolean(3, movimento.getEntrada());
-        stmt.setLong(4, movimento.getFuncionario().getId());
+        stmt.setString(3, movimento.getDescricao());
+        stmt.setBoolean(4, movimento.getEntrada());
         stmt.setString(5, movimento.getObs());
 
         executaFinalizandoConexao();
     }
 
-    public List<MovimentoCaixaModel> listarMovimentoPorCaixa(CaixaModel caixa) throws SQLException {
-        List<MovimentoCaixaModel> listMovimento = null;
+    public List<MovimentoCaixaModel> listarMovimentoPorCaixa(CaixaModel caixa, Boolean entrada) throws SQLException {
+        List<MovimentoCaixaModel> listMovimento = new ArrayList<>();
 
-        String sql = "select mov.id, mov.data_hora, mov.valor, mov.entrada, func.nome, mov.obs from movimento_caixa mov inner join funcionario func on func.id=mov.id_func_mov where mov.id_caixa = ?";
+        String sql = "select mov.id, mov.data_hora, mov.valor, mov.entrada, mov.descricao from movimento_caixa mov where mov.id_caixa = ? and entrada = ?";
 
         preparaComandoSql(sql);
 
         stmt.setLong(1, caixa.getId());
+        stmt.setBoolean(2, entrada);
 
-        ResultSet rs = stmt.executeQuery();
-
-        while (rs.next()){
-            MovimentoCaixaModel.builder()
-                    .id(rs.getLong("mov.id"))
-                    .dataHoraMovimento(Utils.convetTimestampToLocalDateTime(rs.getTimestamp("mov.data_hora")))
-                    .caixa(caixa)
-                    .entrada(rs.getBoolean("mov.entrada"))
-                    .valor(rs.getDouble("mov.valor"))
-                    .funcionario(FuncionarioModel.builder().nome(rs.getString("func.nome")).build())
-                    .obs(rs.getString("mov.obs"))
-                    .build();
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()){
+                listMovimento.add(MovimentoCaixaModel.builder()
+                        .id(rs.getLong("mov.id"))
+                        .dataHoraMovimento(Utils.convetTimestampToLocalDateTime(rs.getTimestamp("mov.data_hora")))
+                        .caixa(caixa)
+                        .entrada(rs.getBoolean("mov.entrada"))
+                        .valor(rs.getDouble("mov.valor"))
+                        .descricao(rs.getString("mov.descricao"))
+                        .build());
+            }
         }
-
-        rs.close();
         finalizaConexao();
 
         return listMovimento;
     }
+    
+    public Double somaEntradasByCaixa() throws SQLException{
+        Double soma = new Double(0);
+        
+        String sql = "select SUM(valor) as soma from movimento_caixa where id_caixa = ? and entrada = true";
+        
+        preparaComandoSql(sql);
+
+        stmt.setLong(1, VariaveisEstaticas.codigoCaixa);
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()){
+                soma = rs.getDouble("soma");
+            }
+        }
+        finalizaConexao();
+
+        return soma;
+    }
+    
+    public Double somaSaidasByCaixa() throws SQLException{
+        Double soma = new Double(0);
+        
+        String sql = "select SUM(valor) as soma from movimento_caixa where id_caixa = ? and entrada = false";
+        
+        preparaComandoSql(sql);
+
+        stmt.setLong(1, VariaveisEstaticas.codigoCaixa);
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()){
+                soma = rs.getDouble("soma");
+            }
+        }
+        finalizaConexao();
+
+        return soma;
+    }
+    
 }

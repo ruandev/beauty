@@ -179,6 +179,7 @@
                 </Property>
               </Properties>
               <Events>
+                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="tabelaConsultaKeyPressed"/>
                 <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="tabelaConsultaKeyReleased"/>
               </Events>
             </Component>
@@ -201,6 +202,7 @@
               <Font name="Microsoft JhengHei UI" size="18" style="0"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Novo"/>
+            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnNovoActionPerformed"/>
@@ -212,6 +214,7 @@
               <Font name="Microsoft JhengHei UI" size="18" style="0"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Excluir"/>
+            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnExcluirActionPerformed"/>

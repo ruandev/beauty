@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ui;
+package ui.cadatros;
 
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.ServicoModel;
 import repository.ServicosRepository;
+import utils.Mascaras;
 
 /**
  *
@@ -87,6 +88,9 @@ public class JFrameServico extends javax.swing.JFrame {
             }
         ));
         tabelaConsulta.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tabelaConsultaKeyPressed(evt);
+            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 tabelaConsultaKeyReleased(evt);
             }
@@ -103,6 +107,7 @@ public class JFrameServico extends javax.swing.JFrame {
 
         btnNovo.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 18)); // NOI18N
         btnNovo.setText("Novo");
+        btnNovo.setEnabled(false);
         btnNovo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNovoActionPerformed(evt);
@@ -111,6 +116,7 @@ public class JFrameServico extends javax.swing.JFrame {
 
         btnExcluir.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 18)); // NOI18N
         btnExcluir.setText("Excluir");
+        btnExcluir.setEnabled(false);
         btnExcluir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExcluirActionPerformed(evt);
@@ -222,25 +228,31 @@ public class JFrameServico extends javax.swing.JFrame {
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void btnGravarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGravarActionPerformed
-        this.buildServico();
         try {
+            this.buildServico();
             if(codigo != null){
                 this.repository.update(servico);
             } else {
                 this.repository.save(servico);
             }
+            this.limparCampos();
+            this.preencheConsulta();
             JOptionPane.showMessageDialog(this, "Serviço salvo com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             System.out.println(ex.getMessage());
             JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar salvar o Serviço", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnGravarActionPerformed
 
     private void tabelaConsultaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelaConsultaKeyReleased
+        
+    }//GEN-LAST:event_tabelaConsultaKeyReleased
+
+    private void tabelaConsultaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelaConsultaKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             this.preencherCampos();
         }
-    }//GEN-LAST:event_tabelaConsultaKeyReleased
+    }//GEN-LAST:event_tabelaConsultaKeyPressed
 
     private void buildServico(){
         servico = ServicoModel.builder()
@@ -289,9 +301,9 @@ public class JFrameServico extends javax.swing.JFrame {
                 };
         
         try {
-            for (ServicoModel servicoUnique : repository.findAll()) {
-                model.addRow(new String[]{String.valueOf(servicoUnique.getId()), servicoUnique.getDescricao(), servicoUnique.getValor().toString().replace(",", ".")});
-            }
+            repository.findAll().forEach((servicoUnique) -> {
+                model.addRow(new String[]{String.valueOf(servicoUnique.getId()), servicoUnique.getDescricao(), Mascaras.monetario.format(servicoUnique.getValor())});
+            });
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
             JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar carregar os Servicoes", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);

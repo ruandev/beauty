@@ -77,5 +77,13 @@ public class AgendamentoRepository extends BaseRepository {
 
         return agendamento;
     }
+   
+   public void delete(AgendamentoModel agendamento)throws SQLException{
+       ServicosAgendamentoRepository servicosAgendamentoRepository = new ServicosAgendamentoRepository();
+       servicosAgendamentoRepository.deleteByAgendamento(agendamento);
+       preparaComandoSql("delete from AGENDAMENTO where id = ? ");
+       stmt.setLong(1, agendamento.getId());
+       executaFinalizandoConexao();
+   }
 }
 

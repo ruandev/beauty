@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ui;
+package ui.cadatros;
 
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.FornecedorModel;
 import repository.FornecedorRepository;
+import utils.Mascaras;
 
 /**
  *
@@ -369,6 +370,7 @@ public class JFrameFornecedor extends javax.swing.JFrame {
 
         btnNovo.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 18)); // NOI18N
         btnNovo.setText("Novo");
+        btnNovo.setEnabled(false);
         btnNovo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNovoActionPerformed(evt);
@@ -385,6 +387,7 @@ public class JFrameFornecedor extends javax.swing.JFrame {
 
         btnExcluir.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 18)); // NOI18N
         btnExcluir.setText("Excluir");
+        btnExcluir.setEnabled(false);
         btnExcluir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExcluirActionPerformed(evt);
@@ -447,8 +450,8 @@ public class JFrameFornecedor extends javax.swing.JFrame {
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void btnGravarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGravarActionPerformed
-        this.buildFornecedor();
         try {
+            this.buildFornecedor();
             if(codigo != null){
                 this.repository.update(fornecedor);
             } else {
@@ -459,7 +462,7 @@ public class JFrameFornecedor extends javax.swing.JFrame {
             btnNovo.setEnabled(true);
             btnExcluir.setEnabled(true);
             JOptionPane.showMessageDialog(this, "Fornecedor salvo com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             System.out.println(ex.getMessage());
             JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar salvar o Fornecedor", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
         }
@@ -537,9 +540,9 @@ public class JFrameFornecedor extends javax.swing.JFrame {
                 };
         
         try {
-            for (FornecedorModel fornecedor : repository.findAll()) {
-                model.addRow(new String[]{String.valueOf(fornecedor.getId()), fornecedor.getNomeFantasia(), fornecedor.getCnpj()});
-            }
+            repository.findAll().forEach((fornecedorUnique) -> {
+                model.addRow(new String[]{String.valueOf(fornecedorUnique.getId()), fornecedorUnique.getNomeFantasia(), Mascaras.converteCNPJ(fornecedorUnique.getCnpj())});
+            });
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
             JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar carregar os Fornecedores", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);

@@ -23,6 +23,7 @@ import repository.AgendamentoRepository;
 import repository.ClienteRepository;
 import repository.ServicosAgendamentoRepository;
 import repository.ServicosRepository;
+import utils.Mascaras;
 import utils.Utils;
 
 /**
@@ -263,6 +264,7 @@ public class JFrameAgendamento extends javax.swing.JFrame {
 
         btnNovo.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 18)); // NOI18N
         btnNovo.setText("Novo");
+        btnNovo.setEnabled(false);
         btnNovo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNovoActionPerformed(evt);
@@ -271,6 +273,7 @@ public class JFrameAgendamento extends javax.swing.JFrame {
 
         btnExcluir.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 18)); // NOI18N
         btnExcluir.setText("Excluir");
+        btnExcluir.setEnabled(false);
         btnExcluir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExcluirActionPerformed(evt);
@@ -330,8 +333,9 @@ public class JFrameAgendamento extends javax.swing.JFrame {
     }//GEN-LAST:event_tabelaServicosAgendamentoKeyReleased
 
     private void btnGravarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGravarActionPerformed
-        this.buildAgendamento();
         try {
+            this.buildAgendamento();
+        
             if(codigo != null){
                 agendamento.setId(codigo);
                 this.repository.alterarAgendamento(agendamento);
@@ -389,7 +393,7 @@ public class JFrameAgendamento extends javax.swing.JFrame {
             btnExcluir.setEnabled(true);
             
             JOptionPane.showMessageDialog(this, "Agendamento salvo com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             System.out.println(ex.getMessage());
             JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar salvar o Cliente", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
         }
@@ -400,17 +404,20 @@ public class JFrameAgendamento extends javax.swing.JFrame {
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-//        int dialogResult = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir o cliente?","Warning",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-//        if(dialogResult == JOptionPane.YES_OPTION){
-//            try {
-//                repository.delete(cliente);
-//                this.limparCampos();
-//                JOptionPane.showMessageDialog(this, "Cliente excluído com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
-//            } catch (SQLException ex) {
-//                System.out.println(ex.getMessage());
-//                JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar excluir o Cliente", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
-//            }
-//        }
+        int dialogResult = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir o agendamento?","Galera de casa aí, comé que é, meu?",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if(dialogResult == JOptionPane.YES_OPTION){
+            try {
+                repository.delete(agendamento);
+                this.limparCampos();
+                this.preencheConsulta();
+                listServicosSelecionados = new ArrayList<>();
+                this.preencherTabelaServico();
+                JOptionPane.showMessageDialog(this, "Agendamento excluído com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+                JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar excluir o Agendamento", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void tabelaConsultaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaConsultaMouseClicked
@@ -466,9 +473,8 @@ public class JFrameAgendamento extends javax.swing.JFrame {
         };
     //construçao do conteudo da tabela........................
     //usando o BD 
-    System.out.println(listServicosSelecionados.size());
     listServicosSelecionados.forEach((servicoSelecionado) -> {
-        model.addRow(new Object[]{servicoSelecionado.getId(), servicoSelecionado.getDescricao(),servicoSelecionado.getValor().toString().replace(".", ",")});
+        model.addRow(new Object[]{servicoSelecionado.getId(), servicoSelecionado.getDescricao(),Mascaras.monetario.format(servicoSelecionado.getValor())});
     });
      
      tabelaServicosAgendamento.setModel(model);
