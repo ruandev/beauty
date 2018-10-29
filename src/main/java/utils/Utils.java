@@ -51,4 +51,9 @@ public class Utils {
                 .from(dateToConvert.atZone(ZoneId.systemDefault())
                 .toInstant());
     }
+    
+    public static LocalDate convetStringToLocalDate(String data){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MMMMM-dd");
+        return LocalDate.parse(data, formatter);
+    }
 }
