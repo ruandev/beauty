@@ -5,11 +5,14 @@
  */
 package ui;
 
+import java.awt.HeadlessException;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -17,12 +20,16 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.AgendamentoModel;
 import model.ClienteModel;
+import model.FuncionarioModel;
 import model.ServicoModel;
 import model.ServicosAgendamentoModel;
+import net.sf.jasperreports.engine.JRException;
 import repository.AgendamentoRepository;
 import repository.ClienteRepository;
+import repository.FuncionarioRepository;
 import repository.ServicosAgendamentoRepository;
 import repository.ServicosRepository;
+import utils.JasperGenerate;
 import utils.Mascaras;
 import utils.Utils;
 
@@ -32,13 +39,15 @@ import utils.Utils;
  */
 public class JFrameAgendamento extends javax.swing.JFrame {
     List<ClienteModel> listClientes;
-    List<ServicoModel> listServicos, listServicosSelecionados, listServicosEdicao;
-    private Long codigo;
+    List<FuncionarioModel> listFuncionarios;
+    List<ServicoModel> listServicos;
+    List<ServicosAgendamentoModel> listServicosSelecionados, listServicosEdicao;
     AgendamentoRepository repository;
     ServicosAgendamentoRepository servicoAgendamentoRepository;
     AgendamentoModel agendamento;
+    private Long codigo;
     /**
-     * Creates new form JFrame
+     * Creates new form JFrameAgendamento
      */
     public JFrameAgendamento() {
         initComponents();
@@ -46,6 +55,7 @@ public class JFrameAgendamento extends javax.swing.JFrame {
         servicoAgendamentoRepository = new ServicosAgendamentoRepository();
         listServicosSelecionados = new ArrayList<>();
         this.preencheClientes();
+        this.preencheFuncionarios();
         this.preencheServicos();
         this.preencheConsulta();
     }
@@ -65,37 +75,47 @@ public class JFrameAgendamento extends javax.swing.JFrame {
         comboCliente = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
         campoDataHoraAgenda = new org.jdesktop.swingx.JXDatePicker();
-        jLabel3 = new javax.swing.JLabel();
-        comboServico = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabelaServicosAgendamento = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
         campoHora = new javax.swing.JFormattedTextField();
         jLabel5 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        comboFuncionario = new javax.swing.JComboBox<>();
+        comboServico = new javax.swing.JComboBox<>();
+        jLabel6 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        campoObs = new javax.swing.JTextArea();
+        jLabel7 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tabelaConsulta = new javax.swing.JTable();
+        jLabel15 = new javax.swing.JLabel();
         btnGravar = new javax.swing.JButton();
         btnNovo = new javax.swing.JButton();
+        btnImprimir = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
 
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Agendamento");
-        setResizable(false);
 
+        abasPanel.setBackground(new java.awt.Color(255, 204, 255));
         abasPanel.setTabPlacement(javax.swing.JTabbedPane.LEFT);
         abasPanel.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 20)); // NOI18N
+        abasPanel.setOpaque(true);
 
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setBackground(new java.awt.Color(255, 204, 255));
 
-        jLabel1.setBackground(new java.awt.Color(0, 153, 204));
+        jLabel1.setBackground(new java.awt.Color(231, 32, 83));
         jLabel1.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText(" Nome Cliente");
         jLabel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel1.setOpaque(true);
 
-        jLabel2.setBackground(new java.awt.Color(0, 153, 204));
+        jLabel2.setBackground(new java.awt.Color(231, 32, 83));
         jLabel2.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText(" Data");
@@ -104,26 +124,12 @@ public class JFrameAgendamento extends javax.swing.JFrame {
 
         campoDataHoraAgenda.setFormats("dd/MM/yyyy");
 
-        jLabel3.setBackground(new java.awt.Color(0, 153, 204));
-        jLabel3.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText(" Serviço");
-        jLabel3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-        jLabel3.setOpaque(true);
-
-        jButton1.setText("+");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
         tabelaServicosAgendamento.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Serviço"
+                "Serviço", "Funcionario"
             }
         ));
         tabelaServicosAgendamento.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -133,7 +139,7 @@ public class JFrameAgendamento extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tabelaServicosAgendamento);
 
-        jLabel4.setBackground(new java.awt.Color(0, 153, 204));
+        jLabel4.setBackground(new java.awt.Color(231, 32, 83));
         jLabel4.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText(" Hora");
@@ -147,7 +153,79 @@ public class JFrameAgendamento extends javax.swing.JFrame {
         }
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(231, 32, 83));
         jLabel5.setText("SELECIONE O SERVIÇO E PRESSIONE [DELETE] PARA EXCLUIR O SERVIÇO DA LISTA");
+
+        jPanel1.setBackground(new java.awt.Color(255, 204, 255));
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabel3.setBackground(new java.awt.Color(231, 32, 83));
+        jLabel3.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText(" Serviço");
+        jLabel3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        jLabel3.setOpaque(true);
+
+        jLabel6.setBackground(new java.awt.Color(231, 32, 83));
+        jLabel6.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setText(" Funcionário");
+        jLabel6.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        jLabel6.setOpaque(true);
+
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/plus.png"))); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(comboFuncionario, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 28, Short.MAX_VALUE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(comboServico, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(comboServico, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(comboFuncionario, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        campoObs.setColumns(20);
+        campoObs.setRows(5);
+        jScrollPane3.setViewportView(campoObs);
+
+        jLabel7.setBackground(new java.awt.Color(231, 32, 83));
+        jLabel7.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setText(" Obs");
+        jLabel7.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        jLabel7.setOpaque(true);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -155,29 +233,27 @@ public class JFrameAgendamento extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(campoDataHoraAgenda, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(comboServico, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGap(18, 18, 18)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(comboCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 621, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jScrollPane1)
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(campoHora, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jLabel5))
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(comboCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 621, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(campoDataHoraAgenda, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(25, 25, 25)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(campoHora))
+                    .addComponent(jLabel5)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane3)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -187,30 +263,29 @@ public class JFrameAgendamento extends javax.swing.JFrame {
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
                     .addComponent(comboCliente))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
-                    .addComponent(campoDataHoraAgenda, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                        .addComponent(campoDataHoraAgenda, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(campoHora, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
-                    .addComponent(campoHora))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(comboServico, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
-                .addGap(30, 30, 30)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 392, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
                 .addComponent(jLabel5)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(91, 91, 91))
         );
-
-        jPanel2Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel1, jLabel2});
 
         abasPanel.addTab("Agendar", jPanel2);
 
-        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.setBackground(new java.awt.Color(255, 204, 255));
 
         tabelaConsulta.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -235,26 +310,37 @@ public class JFrameAgendamento extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(tabelaConsulta);
 
+        jLabel15.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        jLabel15.setForeground(new java.awt.Color(231, 32, 83));
+        jLabel15.setText("Clique duas vezes na linha que deseja editar ou consultar");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 821, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel15)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 812, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 672, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 526, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel15)
+                .addContainerGap())
         );
 
         abasPanel.addTab("Consulta", jPanel3);
 
         btnGravar.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 18)); // NOI18N
+        btnGravar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/save.png"))); // NOI18N
         btnGravar.setText("Gravar");
         btnGravar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -263,6 +349,7 @@ public class JFrameAgendamento extends javax.swing.JFrame {
         });
 
         btnNovo.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 18)); // NOI18N
+        btnNovo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/new.png"))); // NOI18N
         btnNovo.setText("Novo");
         btnNovo.setEnabled(false);
         btnNovo.addActionListener(new java.awt.event.ActionListener() {
@@ -271,7 +358,17 @@ public class JFrameAgendamento extends javax.swing.JFrame {
             }
         });
 
+        btnImprimir.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 18)); // NOI18N
+        btnImprimir.setText("Imprimir");
+        btnImprimir.setEnabled(false);
+        btnImprimir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImprimirActionPerformed(evt);
+            }
+        });
+
         btnExcluir.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 18)); // NOI18N
+        btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/excluir (2).png"))); // NOI18N
         btnExcluir.setText("Excluir");
         btnExcluir.setEnabled(false);
         btnExcluir.addActionListener(new java.awt.event.ActionListener() {
@@ -290,6 +387,8 @@ public class JFrameAgendamento extends javax.swing.JFrame {
                 .addComponent(btnGravar, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -297,105 +396,108 @@ public class JFrameAgendamento extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(abasPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 731, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(abasPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 596, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGravar, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 13, Short.MAX_VALUE))
+                    .addComponent(btnExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 15, Short.MAX_VALUE))
         );
 
-        setSize(new java.awt.Dimension(989, 880));
+        setSize(new java.awt.Dimension(980, 738));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tabelaConsultaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelaConsultaKeyReleased
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-           this.preencherCampos();
-        }
-    }//GEN-LAST:event_tabelaConsultaKeyReleased
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        listServicosSelecionados.add(listServicos.stream().filter(s -> s.getDescricao().equals(comboServico.getSelectedItem().toString())).findFirst().get());
-        this.preencherTabelaServico();
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     private void tabelaServicosAgendamentoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelaServicosAgendamentoKeyReleased
         if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
-            int dialogResult = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir o serviço do agendamento?","Galera de casa aí, comé que é, meu",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-            if(dialogResult == JOptionPane.YES_OPTION){
-                System.out.println("ID Serv: "+tabelaServicosAgendamento.getValueAt(tabelaServicosAgendamento.getSelectedRow(), 0).toString());
-                listServicosSelecionados.removeIf((s -> s.getId().equals(Long.parseLong(tabelaServicosAgendamento.getValueAt(tabelaServicosAgendamento.getSelectedRow(), 0).toString()))));
+            int dialogResult = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir o serviço do agendamento?", "Galera de casa aí, comé que é, meu", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (dialogResult == JOptionPane.YES_OPTION) {
+                System.out.println("ID Serv: " + tabelaServicosAgendamento.getValueAt(tabelaServicosAgendamento.getSelectedRow(), 2).toString());
+                listServicosSelecionados.removeIf((s -> s.getId().equals(Long.parseLong(tabelaServicosAgendamento.getValueAt(tabelaServicosAgendamento.getSelectedRow(), 2).toString()))));
                 this.preencherTabelaServico();
             }
         }
     }//GEN-LAST:event_tabelaServicosAgendamentoKeyReleased
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if (comboServico.getSelectedIndex() < 1) {
+            JOptionPane.showMessageDialog(this, "Selecione um serviço!", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+        } else {
+            if (comboFuncionario.getSelectedIndex() < 1) {
+                listServicosSelecionados.add(
+                    ServicosAgendamentoModel.builder()
+                    .servico(listServicos.get(comboServico.getSelectedIndex() - 1))
+                    .build());
+            } else {
+                listServicosSelecionados.add(
+                    ServicosAgendamentoModel.builder()
+                    .servico(listServicos.get(comboServico.getSelectedIndex() - 1))
+                    .funcionario(listFuncionarios.get(comboFuncionario.getSelectedIndex() - 1))
+                    .build());
+            }
+        }
+        comboServico.setSelectedIndex(0);
+        comboFuncionario.setSelectedIndex(0);
+        this.preencherTabelaServico();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void tabelaConsultaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaConsultaMouseClicked
+        if (evt.getClickCount() == 2) {
+            this.preencherCampos();
+        }
+    }//GEN-LAST:event_tabelaConsultaMouseClicked
+
+    private void tabelaConsultaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelaConsultaKeyReleased
+
+    }//GEN-LAST:event_tabelaConsultaKeyReleased
+
     private void btnGravarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGravarActionPerformed
         try {
             this.buildAgendamento();
-        
-            if(codigo != null){
+
+            if (codigo != null) {
                 agendamento.setId(codigo);
                 this.repository.alterarAgendamento(agendamento);
-                if(listServicosEdicao!= null && !listServicosEdicao.isEmpty()){
-                    List<ServicoModel> servicosRemovidos = listServicosEdicao.stream().filter(e -> (listServicosSelecionados.stream().filter(d -> d.getId().equals(e.getId())).count())<1).collect(Collectors.toList());
-                    List<ServicoModel> servicosAdicionados = listServicosSelecionados.stream().filter(e -> (listServicosEdicao.stream().filter(d -> d.getId().equals(e.getId())).count())<1).collect(Collectors.toList());
-                    
+                if (listServicosEdicao != null && !listServicosEdicao.isEmpty()) {
+                    List<ServicosAgendamentoModel> servicosRemovidos = listServicosEdicao.stream().filter(e -> (listServicosSelecionados.stream().filter(d -> (d.getServico().getId().equals(e.getServico().getId())) && d.getFuncionario().getId().equals(e.getFuncionario().getId())).count()) < 1).collect(Collectors.toList());
+                    List<ServicosAgendamentoModel> servicosAdicionados = listServicosSelecionados.stream().filter(e -> (listServicosEdicao.stream().filter(d -> (d.getServico().getId().equals(e.getServico().getId())) && d.getFuncionario().getId().equals(e.getFuncionario().getId())).count()) < 1).collect(Collectors.toList());
+
                     servicosRemovidos.forEach(servico -> {
-                    try {
-                        servicoAgendamentoRepository.delete(ServicosAgendamentoModel.builder()
-                                .agendamento(agendamento)
-                                .servico(servico)
-                                .build());
-                    } catch (SQLException ex) {
-                        Logger.getLogger(JFrameAgendamento.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                        try {
+                            servico.setAgendamento(agendamento);
+                            servicoAgendamentoRepository.delete(servico);
+                        } catch (SQLException ex) {
+                            System.out.println("Remover serviços: " + ex);
+                            Logger.getLogger(JFrameAgendamento.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     });
                     servicosAdicionados.forEach(servico -> {
                         try {
-                            servicoAgendamentoRepository.save(ServicosAgendamentoModel.builder()
-                                    .agendamento(agendamento)
-                                    .servico(servico)
-                                    .build());
+                            servico.setAgendamento(agendamento);
+                            servicoAgendamentoRepository.save(servico);
                         } catch (SQLException ex) {
+                            System.out.println("Adicionar serviços: " + ex);
                             Logger.getLogger(JFrameAgendamento.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     });
                 } else {
-                    listServicosSelecionados.forEach((servicoSelecionado) -> {
-                        try {
-                            servicoAgendamentoRepository.save(ServicosAgendamentoModel.builder()
-                                    .agendamento(agendamento)
-                                    .servico(servicoSelecionado)
-                                    .build());
-                        } catch (SQLException ex) {
-                            Logger.getLogger(JFrameAgendamento.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    });
+                    this.salvarServicos();
                 }
             } else {
                 agendamento = this.repository.agendar(agendamento);
-                listServicosSelecionados.forEach((servicoSelecionado) -> {
-                    try {
-                        servicoAgendamentoRepository.save(ServicosAgendamentoModel.builder()
-                                .agendamento(agendamento)
-                                .servico(servicoSelecionado)
-                                .build());
-                    } catch (SQLException ex) {
-                        Logger.getLogger(JFrameAgendamento.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                });
+                this.salvarServicos();
             }
             this.preencheConsulta();
             btnNovo.setEnabled(true);
+            btnImprimir.setEnabled(true);
             btnExcluir.setEnabled(true);
-            
+
             JOptionPane.showMessageDialog(this, "Agendamento salvo com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar salvar o Cliente", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+        } catch (HeadlessException | SQLException ex) {
+            System.out.println(ex);
+            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar salvar o Cliente", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnGravarActionPerformed
 
@@ -403,9 +505,19 @@ public class JFrameAgendamento extends javax.swing.JFrame {
         this.limparCampos();
     }//GEN-LAST:event_btnNovoActionPerformed
 
+    private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
+        Map parametros = new HashMap();
+        parametros.put("agendamento", codigo);
+        try {
+            new JasperGenerate().gerar("/reports/Recibo.jasper", parametros, "Ficha/Recibo do Agendamento");
+        } catch (JRException | SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(JFrameAgendamento.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnImprimirActionPerformed
+
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        int dialogResult = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir o agendamento?","Galera de casa aí, comé que é, meu?",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-        if(dialogResult == JOptionPane.YES_OPTION){
+        int dialogResult = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir o agendamento?", "Galera de casa aí, comé que é, meu?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (dialogResult == JOptionPane.YES_OPTION) {
             try {
                 repository.delete(agendamento);
                 this.limparCampos();
@@ -415,164 +527,204 @@ public class JFrameAgendamento extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Agendamento excluído com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
             } catch (SQLException ex) {
                 System.out.println(ex.getMessage());
-                JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar excluir o Agendamento", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar excluir o Agendamento", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btnExcluirActionPerformed
 
-    private void tabelaConsultaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaConsultaMouseClicked
-        if(evt.getClickCount() == 2){
-            this.preencherCampos();
-        }
-    }//GEN-LAST:event_tabelaConsultaMouseClicked
-
-    private void preencheClientes(){
+    private void preencheClientes() {
         ClienteRepository clienteRepository = new ClienteRepository();
         try {
             listClientes = clienteRepository.findAllCombo();
             comboCliente.addItem("...");
             listClientes.forEach((clienteUnique) -> {
                 comboCliente.addItem(clienteUnique.getNome());
-             });
+            });
         } catch (SQLException ex) {
             Logger.getLogger(JFrameAgendamento.class.getName()).log(Level.SEVERE, null, ex);
         }
-    } 
-    
-    private void preencheServicos(){
+    }
+
+    private void preencheFuncionarios() {
+        FuncionarioRepository funcionarioRepository = new FuncionarioRepository();
+        try {
+            listFuncionarios = funcionarioRepository.findAllCombo();
+            comboFuncionario.addItem("...");
+            listFuncionarios.forEach((clienteUnique) -> {
+                comboFuncionario.addItem(clienteUnique.getNome());
+            });
+        } catch (SQLException ex) {
+            Logger.getLogger(JFrameAgendamento.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void preencheServicos() {
         ServicosRepository servicoRepository = new ServicosRepository();
         try {
             listServicos = servicoRepository.findAll();
             comboServico.addItem("...");
             listServicos.forEach((servicoUnique) -> {
                 comboServico.addItem(servicoUnique.getDescricao());
-             });
+            });
         } catch (SQLException ex) {
             Logger.getLogger(JFrameAgendamento.class.getName()).log(Level.SEVERE, null, ex);
         }
-    } 
-    
-    private void preencherTabelaServico(){
-        DefaultTableModel model = new DefaultTableModel(
-            new Object[][] { },
-            //aqui a construçao do cabeçalho        
-            new String [] {"","Descrição","Valor"}){
-                Class[] types = new Class[]{
-                //para cada coluna acrescentar mais um construtor
-                    java.lang.Object.class,java.lang.Object.class,java.lang.Object.class,
-        };
-        //para cada coluna acrescentar mais um objetooo...
-        boolean[] canEdit = new boolean[] {false,false,false};
-    
-        public Class getColumnClass(int columnIndex){
-            return types[columnIndex];
-        }
-        public boolean isCellEditable(int rowIndex,int columnIndex){
-            return canEdit[columnIndex];
-        }  
-        };
-    //construçao do conteudo da tabela........................
-    //usando o BD 
-    listServicosSelecionados.forEach((servicoSelecionado) -> {
-        model.addRow(new Object[]{servicoSelecionado.getId(), servicoSelecionado.getDescricao(),Mascaras.monetario.format(servicoSelecionado.getValor())});
-    });
-     
-     tabelaServicosAgendamento.setModel(model);
-     tabelaServicosAgendamento.sizeColumnsToFit(10);
-     tabelaServicosAgendamento.setRowHeight(20);
-     tabelaServicosAgendamento.getColumnModel().getColumn(0).setResizable(false);
-     tabelaServicosAgendamento.getColumnModel().getColumn(0).setPreferredWidth(0);
-     tabelaServicosAgendamento.getColumnModel().getColumn(0).setMaxWidth(0);
-     tabelaServicosAgendamento.getColumnModel().getColumn(0).setMinWidth(0);;
-     tabelaServicosAgendamento.getColumnModel().getColumn(1).setResizable(false);
-     tabelaServicosAgendamento.getColumnModel().getColumn(1).setPreferredWidth(200);
-     tabelaServicosAgendamento.getColumnModel().getColumn(2).setResizable(false);
-     tabelaServicosAgendamento.getColumnModel().getColumn(2).setPreferredWidth(100);
     }
-    
-    private void buildAgendamento(){
+
+    private void preencherTabelaServico() {
+        DefaultTableModel model = new DefaultTableModel(
+                new Object[][]{},
+                //aqui a construï¿½ao do cabeï¿½alho
+                new String[]{"", "", "", "Serviço", "Funcionáo", "Valor"}) {
+            Class[] types = new Class[]{
+                //para cada coluna acrescentar mais um construtor
+                    java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class};
+            //para cada coluna acrescentar mais um objetooo...
+            boolean[] canEdit = new boolean[]{false, false, false, false, false, false};
+
+            public Class getColumnClass(int columnIndex) {
+                return types[columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        };
+        //construï¿½ao do conteudo da tabela........................
+        //usando o BD
+        listServicosSelecionados.forEach((servicoSelecionado) -> {
+            model.addRow(new Object[]{servicoSelecionado.getServico().getId(), (servicoSelecionado.getFuncionario() != null ? servicoSelecionado.getFuncionario().getId() : 0), servicoSelecionado.getId(), servicoSelecionado.getServico().getDescricao(), (servicoSelecionado.getFuncionario() != null ? servicoSelecionado.getFuncionario().getNome() : ""), Mascaras.monetario.format(servicoSelecionado.getServico().getValor())});
+        });
+
+        tabelaServicosAgendamento.setModel(model);
+        tabelaServicosAgendamento.sizeColumnsToFit(10);
+        tabelaServicosAgendamento.setRowHeight(20);
+        tabelaServicosAgendamento.getColumnModel().getColumn(0).setResizable(false);
+        tabelaServicosAgendamento.getColumnModel().getColumn(0).setWidth(0);
+        tabelaServicosAgendamento.getColumnModel().getColumn(0).setPreferredWidth(0);
+        tabelaServicosAgendamento.getColumnModel().getColumn(0).setMaxWidth(0);
+        tabelaServicosAgendamento.getColumnModel().getColumn(0).setMinWidth(0);
+        tabelaServicosAgendamento.getColumnModel().getColumn(1).setResizable(false);
+        tabelaServicosAgendamento.getColumnModel().getColumn(1).setPreferredWidth(0);
+        tabelaServicosAgendamento.getColumnModel().getColumn(1).setMaxWidth(0);
+        tabelaServicosAgendamento.getColumnModel().getColumn(1).setMinWidth(0);
+        tabelaServicosAgendamento.getColumnModel().getColumn(2).setResizable(false);
+        tabelaServicosAgendamento.getColumnModel().getColumn(2).setPreferredWidth(0);
+        tabelaServicosAgendamento.getColumnModel().getColumn(2).setMaxWidth(0);
+        tabelaServicosAgendamento.getColumnModel().getColumn(2).setMinWidth(0);
+        tabelaServicosAgendamento.getColumnModel().getColumn(3).setResizable(false);
+        tabelaServicosAgendamento.getColumnModel().getColumn(3).setPreferredWidth(300);
+        tabelaServicosAgendamento.getColumnModel().getColumn(3).setMaxWidth(300);
+        tabelaServicosAgendamento.getColumnModel().getColumn(3).setMinWidth(300);
+        tabelaServicosAgendamento.getColumnModel().getColumn(4).setResizable(false);
+        tabelaServicosAgendamento.getColumnModel().getColumn(4).setPreferredWidth(300);
+        tabelaServicosAgendamento.getColumnModel().getColumn(4).setMaxWidth(300);
+        tabelaServicosAgendamento.getColumnModel().getColumn(4).setMinWidth(300);
+        tabelaServicosAgendamento.getColumnModel().getColumn(5).setResizable(false);
+        tabelaServicosAgendamento.getColumnModel().getColumn(5).setPreferredWidth(200);
+        tabelaServicosAgendamento.getColumnModel().getColumn(5).setMaxWidth(200);
+        tabelaServicosAgendamento.getColumnModel().getColumn(5).setMinWidth(200);
+    }
+
+    private void buildAgendamento() {
         agendamento = AgendamentoModel.builder()
-                .clienteModel(listClientes.get(comboCliente.getSelectedIndex()-1))
+                .clienteModel(listClientes.get(comboCliente.getSelectedIndex() - 1))
                 .dataHora(utils.Utils.convetDateAndStringHourToLocalDateTime(campoDataHoraAgenda.getDate(), campoHora.getText()))
+                .obs(campoObs.getText())
                 .build();
     }
-    
-    private void limparCampos(){
-        btnNovo.setEnabled(true);
-        btnExcluir.setEnabled(true);
+
+    private void limparCampos() {
+        btnNovo.setEnabled(false);
+        btnImprimir.setEnabled(false);
+        btnExcluir.setEnabled(false);
         listServicosSelecionados = new ArrayList<>();
         comboCliente.setSelectedIndex(0);
         comboServico.setSelectedIndex(0);
         campoDataHoraAgenda.setDate(null);
         campoHora.setText(null);
+        campoObs.setText(null);
     }
-    
-    private void preencheConsulta(){
+
+    private void preencheConsulta() {
         DefaultTableModel model = new DefaultTableModel(
-            new Object[][] { },
-            //aqui a construçao do cabeçalho        
-            new String [] {"","Cliente","Data"}){
-                Class[] types = new Class[]{
+                new Object[][]{},
+                //aqui a construï¿½ao do cabeï¿½alho
+                new String[]{"", "Cliente", "Data"}) {
+            Class[] types = new Class[]{
                 //para cada coluna acrescentar mais um construtor
-                    java.lang.Object.class,java.lang.Object.class,java.lang.Object.class,
-        };
-        //para cada coluna acrescentar mais um objetooo...
-        boolean[] canEdit = new boolean[] {false,false,false};
-    
-        public Class getColumnClass(int columnIndex){
-            return types[columnIndex];
-        }
-        public boolean isCellEditable(int rowIndex,int columnIndex){
-            return canEdit[columnIndex];
-        }  
+                    java.lang.Object.class, java.lang.Object.class, java.lang.Object.class,};
+            //para cada coluna acrescentar mais um objetooo...
+            boolean[] canEdit = new boolean[]{false, false, false};
+
+            public Class getColumnClass(int columnIndex) {
+                return types[columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
         };
         try {
             repository.findAllAgendamentosFuturos().forEach((agendamentoUnique) -> {
-                model.addRow(new Object[]{agendamentoUnique.getId(), agendamentoUnique.getClienteModel().getNome(),Utils.formatLocalDateTime(agendamentoUnique.getDataHora(), "dd/MM/yyyy HH:mm")});
-            }); 
+                model.addRow(new Object[]{agendamentoUnique.getId(), agendamentoUnique.getClienteModel().getNome(), Utils.formatLocalDateTime(agendamentoUnique.getDataHora(), "dd/MM/yyyy HH:mm")});
+            });
         } catch (SQLException ex) {
             Logger.getLogger(JFrameAgendamento.class.getName()).log(Level.SEVERE, null, ex);
         }
-     
-     tabelaConsulta.setModel(model);
-     tabelaConsulta.sizeColumnsToFit(10);
-     tabelaConsulta.setRowHeight(20);
-     tabelaConsulta.getColumnModel().getColumn(0).setResizable(false);
-     tabelaConsulta.getColumnModel().getColumn(0).setPreferredWidth(0);
-     tabelaConsulta.getColumnModel().getColumn(0).setMaxWidth(0);
-     tabelaConsulta.getColumnModel().getColumn(0).setMinWidth(0);
-     tabelaConsulta.getColumnModel().getColumn(1).setResizable(false);
-     tabelaConsulta.getColumnModel().getColumn(1).setPreferredWidth(200);
-     tabelaConsulta.getColumnModel().getColumn(2).setResizable(false);
-     tabelaConsulta.getColumnModel().getColumn(2).setPreferredWidth(100);
+
+        tabelaConsulta.setModel(model);
+        tabelaConsulta.sizeColumnsToFit(10);
+        tabelaConsulta.setRowHeight(20);
+        tabelaConsulta.getColumnModel().getColumn(0).setResizable(false);
+        tabelaConsulta.getColumnModel().getColumn(0).setPreferredWidth(0);
+        tabelaConsulta.getColumnModel().getColumn(0).setMaxWidth(0);
+        tabelaConsulta.getColumnModel().getColumn(0).setMinWidth(0);
+        tabelaConsulta.getColumnModel().getColumn(1).setResizable(false);
+        tabelaConsulta.getColumnModel().getColumn(1).setPreferredWidth(200);
+        tabelaConsulta.getColumnModel().getColumn(2).setResizable(false);
+        tabelaConsulta.getColumnModel().getColumn(2).setPreferredWidth(100);
     }
-    
-    private void preencherCampos(){
+
+    private void preencherCampos() {
         abasPanel.setSelectedIndex(0);
         codigo = Long.parseLong(tabelaConsulta.getValueAt(tabelaConsulta.getSelectedRow(), 0).toString());
         try {
             agendamento = repository.findOne(AgendamentoModel.builder().id(codigo).build());
             comboCliente.setSelectedItem(agendamento.getClienteModel().getNome());
+            campoObs.setText(agendamento.getObs());
             Date data = Utils.convertLocalDateTimeToDate(agendamento.getDataHora());
             campoDataHoraAgenda.setDate(data);
             int hora = data.getHours();
             int minuto = data.getMinutes();
-            String horas = (hora < 10 ? "0"+String.valueOf(hora) : String.valueOf(hora));
-            String minutos = (minuto < 10 ? "0"+String.valueOf(minuto) : String.valueOf(minuto));
+            String horas = (hora < 10 ? "0" + String.valueOf(hora) : String.valueOf(hora));
+            String minutos = (minuto < 10 ? "0" + String.valueOf(minuto) : String.valueOf(minuto));
             String horaCompleta = horas + ":" + minutos;
             campoHora.setText(horaCompleta);
             listServicosSelecionados = new ArrayList<>();
-            servicoAgendamentoRepository.findServicosPorAgendamento(agendamento).forEach((servicoAgend) -> {
-                listServicosSelecionados.add(servicoAgend.getServico());
-            });
+            listServicosSelecionados.addAll(servicoAgendamentoRepository.findServicosPorAgendamento(agendamento));
             listServicosEdicao = new ArrayList<>();
             listServicosEdicao.addAll(listServicosSelecionados);
-            if(!listServicosSelecionados.isEmpty()){
+            if (!listServicosSelecionados.isEmpty()) {
                 this.preencherTabelaServico();
             }
+            btnNovo.setEnabled(true);
+            btnImprimir.setEnabled(true);
+            btnExcluir.setEnabled(true);
         } catch (SQLException ex) {
             Logger.getLogger(JFrameAgendamento.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    private void salvarServicos() {
+        listServicosSelecionados.forEach((servicoSelecionado) -> {
+            try {
+                servicoSelecionado.setAgendamento(agendamento);
+                servicoAgendamentoRepository.save(servicoSelecionado);
+            } catch (SQLException ex) {
+                Logger.getLogger(JFrameAgendamento.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
     }
     
     /**
@@ -591,9 +743,18 @@ public class JFrameAgendamento extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(JFrameAgendamento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(JFrameAgendamento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(JFrameAgendamento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(JFrameAgendamento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
@@ -606,21 +767,29 @@ public class JFrameAgendamento extends javax.swing.JFrame {
     private javax.swing.JTabbedPane abasPanel;
     private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnGravar;
+    private javax.swing.JButton btnImprimir;
     private javax.swing.JButton btnNovo;
     private org.jdesktop.swingx.JXDatePicker campoDataHoraAgenda;
     private javax.swing.JFormattedTextField campoHora;
+    private javax.swing.JTextArea campoObs;
     private javax.swing.JComboBox<String> comboCliente;
+    private javax.swing.JComboBox<String> comboFuncionario;
     private javax.swing.JComboBox<String> comboServico;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable tabelaConsulta;
     private javax.swing.JTable tabelaServicosAgendamento;
     // End of variables declaration//GEN-END:variables

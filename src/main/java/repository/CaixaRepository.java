@@ -1,10 +1,10 @@
 package repository;
 
 import model.CaixaModel;
+import utils.VariaveisEstaticas;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import utils.VariaveisEstaticas;
 
 public class CaixaRepository extends BaseRepository {
 
@@ -25,13 +25,12 @@ public class CaixaRepository extends BaseRepository {
     }
 
     public void fecharCaixa(CaixaModel caixa) throws SQLException {
-        String sql = "update CAIXA set fechamento = now(), valor_final = ?, aberto = false, id_func_fecha = ?, obs =? where id = ?";
+        String sql = "update CAIXA set fechamento = now(), valor_final = ?, aberto = false, obs =? where id = ?";
         preparaComandoSql(sql);
 
         stmt.setDouble(1, caixa.getValorFinal());
-        stmt.setLong(2, caixa.getFuncionarioFechamento().getId());
-        stmt.setString(3, caixa.getObs());
-        stmt.setLong(4, caixa.getId());
+        stmt.setString(2, caixa.getObs());
+        stmt.setLong(3, caixa.getId());
 
         executaFinalizandoConexao();
     }

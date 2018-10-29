@@ -5,6 +5,7 @@
  */
 package ui.caixa;
 
+import java.awt.HeadlessException;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,10 +20,12 @@ import utils.VariaveisEstaticas;
  * @author skate
  */
 public class JFrameAberturaCaixa extends javax.swing.JFrame {
+
     CaixaRepository repository;
     CaixaModel caixa;
+
     /**
-     * Creates new form JFrameAberturaCaixa
+     * Creates new form AbreCaixa
      */
     public JFrameAberturaCaixa() {
         initComponents();
@@ -55,16 +58,17 @@ public class JFrameAberturaCaixa extends javax.swing.JFrame {
         campoObs = new javax.swing.JTextArea();
         campoValor = new javax.swing.JTextField();
 
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Abertura de Caixa");
-        setResizable(false);
 
-        jPanel1.setBackground(new java.awt.Color(0, 153, 204));
+        jPanel1.setBackground(new java.awt.Color(255, 204, 255));
+        jPanel1.setPreferredSize(new java.awt.Dimension(730, 314));
 
         jLabel1.setFont(new java.awt.Font("Calibri", 1, 20)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("ABERTURA DE CAIXA");
 
-        jLabel5.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel5.setBackground(new java.awt.Color(231, 32, 83));
         jLabel5.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText(" Valor Inicial");
@@ -79,7 +83,7 @@ public class JFrameAberturaCaixa extends javax.swing.JFrame {
             }
         });
 
-        jLabel6.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel6.setBackground(new java.awt.Color(231, 32, 83));
         jLabel6.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText(" OBS.:");
@@ -143,27 +147,25 @@ public class JFrameAberturaCaixa extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        setSize(new java.awt.Dimension(752, 375));
+        setSize(new java.awt.Dimension(752, 370));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAbrirCaixaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirCaixaActionPerformed
-        int dialogResult = JOptionPane.showConfirmDialog(null, "<html>Deseja realmente <b>abrir</b> o caixa para o dia atual?<br>Essa é uma ação permanente!</html>","Galera de casa aí, comé que é, meu",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-        if(dialogResult == JOptionPane.YES_OPTION){
+        int dialogResult = JOptionPane.showConfirmDialog(null, "<html>Deseja realmente <b>abrir</b> o caixa para o dia atual?<br>Essa é uma ação permanente!</html>", "Galera de casa aí, comé que é, meu", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (dialogResult == JOptionPane.YES_OPTION) {
             try {
                 this.buildCaixa();
                 caixa = repository.abrirCaixa(caixa);
                 VariaveisEstaticas.setCodigoCaixa(caixa.getId());
                 this.bloquearCampos();
                 JOptionPane.showMessageDialog(this, "Caixa do dia aberto com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
-            } catch (Exception ex) {
+            } catch (HeadlessException | SQLException ex) {
                 System.out.println(ex.getMessage());
-                JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar abrir o caixa", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar abrir o caixa", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btnAbrirCaixaActionPerformed
@@ -173,19 +175,19 @@ public class JFrameAberturaCaixa extends javax.swing.JFrame {
             double valor = Mascaras.converteDouble(campoValor.getText());
             campoValor.setText(Mascaras.monetario.format(valor));
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Valor Inválido!", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Valor Inválido!", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
             campoValor.setText("");
             campoValor.requestFocus();
         }
     }//GEN-LAST:event_campoValorFocusLost
 
-   private void buildCaixa(){
+    private void buildCaixa(){
        caixa = CaixaModel.builder()
                .valorInicial(Mascaras.converteDouble(campoValor.getText()))
                .obs(campoObs.getText())
                .build();
-   } 
-   
+   }
+
    private void bloquearCampos(){
        campoValor.setEnabled(false);
        campoObs.setEnabled(false);
@@ -217,6 +219,9 @@ public class JFrameAberturaCaixa extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(JFrameAberturaCaixa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */

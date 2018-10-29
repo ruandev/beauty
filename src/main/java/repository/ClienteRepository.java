@@ -126,7 +126,7 @@ public class ClienteRepository extends BaseRepository {
     public List<ClienteModel> findAllCombo() throws SQLException {
         List<ClienteModel> listCliente = new ArrayList<>();
 
-        preparaComandoSql("select * from CLIENTE");
+        preparaComandoSql("select id, nome from CLIENTE order by nome");
         try (ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 ClienteModel cliente = ClienteModel.builder()

@@ -6,8 +6,6 @@
 package ui.caixa;
 
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.CaixaModel;
@@ -21,24 +19,16 @@ import utils.VariaveisEstaticas;
  * @author skate
  */
 public class JFrameMovimentoCaixa extends javax.swing.JFrame {
+
     MovimentoCaixaRepository repository;
 
     /**
-     * Creates new form JFrameMovimentoCaixa
+     * Creates new form fechamento
      */
     public JFrameMovimentoCaixa() {
-        repository = new MovimentoCaixaRepository();
         initComponents();
+        repository = new MovimentoCaixaRepository();
         this.preencherTabelas();
-    }
-    
-    private void preencherTabelas(){
-        try {
-            this.preencherEntradas();
-            this.preencherSaidas();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar carregar os Movimentos", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
-        }
     }
 
     /**
@@ -59,10 +49,11 @@ public class JFrameMovimentoCaixa extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         tabelaEntradas = new javax.swing.JTable();
 
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Movimentos de Caixa");
-        setResizable(false);
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setBackground(new java.awt.Color(255, 204, 255));
+        jPanel1.setPreferredSize(new java.awt.Dimension(1025, 818));
 
         jLabel1.setFont(new java.awt.Font("Calibri", 1, 20)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -173,27 +164,36 @@ public class JFrameMovimentoCaixa extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void preencherEntradas() throws SQLException{
+    private void preencherTabelas() {
+        try {
+            this.preencherEntradas();
+            this.preencherSaidas();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar carregar os Movimentos", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void preencherEntradas() throws SQLException {
         DefaultTableModel model = new DefaultTableModel(
                 new Object[][]{},
-                //aqui a construçao do cabeçalho        
+                //aqui a construï¿½ao do cabeï¿½alho
                 new String[]{"DESCRIÇÃO", "HORA", "VALOR"}) {
-                    Class[] types = new Class[]{
-                        //para cada coluna acrescentar mais um construtor
-                        java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
-                    };
-                    //para cada coluna acrescentar mais um objetooo...
-                    boolean[] canEdit = new boolean[]{false, false, false};
+            Class[] types = new Class[]{
+                //para cada coluna acrescentar mais um construtor
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+            };
+            //para cada coluna acrescentar mais um objetooo...
+            boolean[] canEdit = new boolean[]{false, false, false};
 
-                    public Class getColumnClass(int columnIndex) {
-                        return types[columnIndex];
-                    }
+            public Class getColumnClass(int columnIndex) {
+                return types[columnIndex];
+            }
 
-                    public boolean isCellEditable(int rowIndex, int columnIndex) {
-                        return canEdit[columnIndex];
-                    }
-                };
-        
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        };
+
         repository.listarMovimentoPorCaixa(CaixaModel.builder().id(VariaveisEstaticas.codigoCaixa).build(), true).forEach((movimento) -> {
             model.addRow(new Object[]{movimento.getDescricao(), Utils.formatLocalDateTime(movimento.getDataHoraMovimento(), "HH:mm"), Mascaras.monetario.format(movimento.getValor())});
         });
@@ -208,28 +208,28 @@ public class JFrameMovimentoCaixa extends javax.swing.JFrame {
         tabelaEntradas.getColumnModel().getColumn(2).setResizable(false);
         tabelaEntradas.getColumnModel().getColumn(2).setPreferredWidth(200);
     }
-    
-    private void preencherSaidas() throws SQLException{
+
+    private void preencherSaidas() throws SQLException {
         DefaultTableModel model = new DefaultTableModel(
                 new Object[][]{},
-                //aqui a construçao do cabeçalho        
+                //aqui a construï¿½ao do cabeï¿½alho
                 new String[]{"DESCRIÇÃO", "HORA", "VALOR"}) {
-                    Class[] types = new Class[]{
-                        //para cada coluna acrescentar mais um construtor
-                        java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
-                    };
-                    //para cada coluna acrescentar mais um objetooo...
-                    boolean[] canEdit = new boolean[]{false, false, false};
+            Class[] types = new Class[]{
+                //para cada coluna acrescentar mais um construtor
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+            };
+            //para cada coluna acrescentar mais um objetooo...
+            boolean[] canEdit = new boolean[]{false, false, false};
 
-                    public Class getColumnClass(int columnIndex) {
-                        return types[columnIndex];
-                    }
+            public Class getColumnClass(int columnIndex) {
+                return types[columnIndex];
+            }
 
-                    public boolean isCellEditable(int rowIndex, int columnIndex) {
-                        return canEdit[columnIndex];
-                    }
-                };
-        
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        };
+
         repository.listarMovimentoPorCaixa(CaixaModel.builder().id(VariaveisEstaticas.codigoCaixa).build(), false).forEach((movimento) -> {
             model.addRow(new Object[]{movimento.getDescricao(), Utils.formatLocalDateTime(movimento.getDataHoraMovimento(), "HH:mm"), Mascaras.monetario.format(movimento.getValor())});
         });
@@ -244,7 +244,7 @@ public class JFrameMovimentoCaixa extends javax.swing.JFrame {
         tabelaSaidas.getColumnModel().getColumn(2).setResizable(false);
         tabelaSaidas.getColumnModel().getColumn(2).setPreferredWidth(200);
     }
-    
+
     /**
      * @param args the command line arguments
      */
@@ -271,10 +271,15 @@ public class JFrameMovimentoCaixa extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(JFrameMovimentoCaixa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> {
-            new JFrameMovimentoCaixa().setVisible(true);
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new JFrameMovimentoCaixa().setVisible(true);
+            }
         });
     }
 

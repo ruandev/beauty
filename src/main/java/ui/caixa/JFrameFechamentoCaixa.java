@@ -11,23 +11,27 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import model.CaixaModel;
 import repository.CaixaRepository;
+import utils.Mascaras;
+import utils.VariaveisEstaticas;
 
 /**
  *
  * @author skate
  */
 public class JFrameFechamentoCaixa extends javax.swing.JFrame {
+
     CaixaRepository repository;
     CaixaModel caixa;
+
     /**
-     * Creates new form JFrameAberturaCaixa
+     * Creates new form fechamento
      */
     public JFrameFechamentoCaixa() {
         initComponents();
         repository = new CaixaRepository();
         try {
             Boolean estadoAtual = repository.verificaEstadoCaixaDia();
-            if(estadoAtual == null || !estadoAtual){
+            if (estadoAtual == null || !estadoAtual) {
                 this.bloquearCampos();
                 JOptionPane.showMessageDialog(null, "Não é possível fechar um caixa que ainda não foi aberto", "Ô loco meu!", JOptionPane.WARNING_MESSAGE);
             }
@@ -48,40 +52,37 @@ public class JFrameFechamentoCaixa extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        campoValor = new javax.swing.JFormattedTextField();
         btnFecharCaixa = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         campoObs = new javax.swing.JTextArea();
+        campoValor = new javax.swing.JTextField();
 
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Fechamento de Caixa");
-        setResizable(false);
 
-        jPanel1.setBackground(new java.awt.Color(255, 102, 0));
+        jPanel1.setBackground(new java.awt.Color(255, 204, 255));
 
         jLabel1.setFont(new java.awt.Font("Calibri", 1, 20)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("FECHAMENTO DE CAIXA");
 
-        jLabel5.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel5.setBackground(new java.awt.Color(231, 32, 83));
         jLabel5.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText(" Valor Final");
         jLabel5.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel5.setOpaque(true);
 
-        campoValor.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
-
         btnFecharCaixa.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 18)); // NOI18N
         btnFecharCaixa.setText("Fechar o caixa");
-        btnFecharCaixa.setActionCommand("Fechar o caixa");
         btnFecharCaixa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnFecharCaixaActionPerformed(evt);
             }
         });
 
-        jLabel6.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel6.setBackground(new java.awt.Color(231, 32, 83));
         jLabel6.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText(" OBS.:");
@@ -91,6 +92,17 @@ public class JFrameFechamentoCaixa extends javax.swing.JFrame {
         campoObs.setColumns(20);
         campoObs.setRows(5);
         jScrollPane1.setViewportView(campoObs);
+
+        campoValor.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                campoValorFocusLost(evt);
+            }
+        });
+        campoValor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                campoValorActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -103,14 +115,15 @@ public class JFrameFechamentoCaixa extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(campoValor))
+                        .addComponent(campoValor, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnFecharCaixa, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)))
+                        .addComponent(jScrollPane1)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -120,8 +133,8 @@ public class JFrameFechamentoCaixa extends javax.swing.JFrame {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(campoValor, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                    .addComponent(campoValor))
                 .addGap(11, 11, 11)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -139,43 +152,58 @@ public class JFrameFechamentoCaixa extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        setSize(new java.awt.Dimension(752, 375));
+        setSize(new java.awt.Dimension(597, 370));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnFecharCaixaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFecharCaixaActionPerformed
-        int dialogResult = JOptionPane.showConfirmDialog(null, "<html>Deseja realmente <b>fechar</b> o caixa para o dia atual?<br>Essa é uma ação permanente!</html>","Galera de casa aí, comé que é, meu",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-        if(dialogResult == JOptionPane.YES_OPTION){
+        int dialogResult = JOptionPane.showConfirmDialog(null, "<html>Deseja realmente <b>fechar</b> o caixa para o dia atual?<br>Essa Ã¯Â¿Â½ uma aÃ¯Â¿Â½Ã¯Â¿Â½o permanente!</html>", "Galera de casa aÃ¯Â¿Â½, comÃ¯Â¿Â½ que Ã¯Â¿Â½, meu", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (dialogResult == JOptionPane.YES_OPTION) {
             try {
                 this.buildCaixa();
                 repository.fecharCaixa(caixa);
                 this.bloquearCampos();
+                VariaveisEstaticas.setCodigoCaixa(0L);
                 JOptionPane.showMessageDialog(this, "Caixa do dia fechado com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
             } catch (Exception ex) {
-                System.out.println(ex.getMessage());
-                JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar dchar o caixa", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+                System.out.println(ex);
+                JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar fechar o caixa", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btnFecharCaixaActionPerformed
 
-   private void buildCaixa(){
-       caixa = CaixaModel.builder()
-               .valorInicial(Double.valueOf(campoValor.getText().replace(".", "").replace(",", ".")))
-               .obs(campoObs.getText())
-               .build();
-   } 
-   
-   private void bloquearCampos(){
-       campoValor.setEnabled(false);
-       campoObs.setEnabled(false);
-       btnFecharCaixa.setEnabled(false);
-   }
-    
+    private void campoValorFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_campoValorFocusLost
+        try {
+            double valor = Mascaras.converteDouble(campoValor.getText());
+            campoValor.setText(Mascaras.monetario.format(valor));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Valor Inválido!", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+            campoValor.setText("");
+            campoValor.requestFocus();
+        }
+    }//GEN-LAST:event_campoValorFocusLost
+
+    private void campoValorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoValorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_campoValorActionPerformed
+
+    private void buildCaixa() {
+        caixa = CaixaModel.builder()
+                .id(VariaveisEstaticas.codigoCaixa)
+                .valorFinal(Mascaras.converteDouble(campoValor.getText()))
+                .obs(campoObs.getText())
+                .build();
+    }
+
+    private void bloquearCampos() {
+        campoValor.setEnabled(false);
+        campoObs.setEnabled(false);
+        btnFecharCaixa.setEnabled(false);
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -203,6 +231,8 @@ public class JFrameFechamentoCaixa extends javax.swing.JFrame {
         }
         //</editor-fold>
         //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
@@ -213,7 +243,7 @@ public class JFrameFechamentoCaixa extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnFecharCaixa;
     private javax.swing.JTextArea campoObs;
-    private javax.swing.JFormattedTextField campoValor;
+    private javax.swing.JTextField campoValor;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;

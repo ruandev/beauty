@@ -3,30 +3,31 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ui.cadatros;
+package ui.cadastros;
 
-import java.awt.event.KeyEvent;
+import java.awt.HeadlessException;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import model.FornecedorModel;
-import repository.FornecedorRepository;
+import model.ClienteModel;
+import org.apache.commons.lang.StringUtils;
+import repository.ClienteRepository;
 import utils.Mascaras;
 
 /**
  *
  * @author skate
  */
-public class JFrameFornecedor extends javax.swing.JFrame {
-    FornecedorModel fornecedor;
-    FornecedorRepository repository;
+public class JFrameCliente extends javax.swing.JFrame {
+    ClienteModel cliente;
+    ClienteRepository repository;
     Long codigo;
     /**
-     * Creates new form JFramePrincipal
+     * Creates new form Cliente
      */
-    public JFrameFornecedor() {
+    public JFrameCliente() {
         initComponents();
-        repository = new FornecedorRepository();
+        repository = new ClienteRepository();
         btnNovo.setEnabled(false);
         btnExcluir.setEnabled(false);
         preencheConsulta();
@@ -50,15 +51,14 @@ public class JFrameFornecedor extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         campoObservacao = new javax.swing.JTextArea();
-        campoNomeFantasia = new javax.swing.JTextField();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        campoCNPJ = new javax.swing.JFormattedTextField();
+        campoNomeCompleto = new javax.swing.JTextField();
+        campoCPF = new javax.swing.JFormattedTextField();
         campoEmail = new javax.swing.JTextField();
-        campoTelefone = new javax.swing.JTextField();
-        campoRepresentante = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         campoCelular = new javax.swing.JFormattedTextField();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        campoRG = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
@@ -70,43 +70,47 @@ public class JFrameFornecedor extends javax.swing.JFrame {
         campoCidade = new javax.swing.JTextField();
         campoLogradouro = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tabelaConsulta = new javax.swing.JTable();
-        btnNovo = new javax.swing.JButton();
+        jLabel15 = new javax.swing.JLabel();
         btnGravar = new javax.swing.JButton();
+        btnNovo = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setResizable(false);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Cadastro de Cliente");
 
+        abasPanel.setBackground(new java.awt.Color(255, 204, 255));
         abasPanel.setTabPlacement(javax.swing.JTabbedPane.LEFT);
         abasPanel.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 20)); // NOI18N
+        abasPanel.setOpaque(true);
 
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setBackground(new java.awt.Color(255, 204, 255));
 
-        jLabel1.setBackground(new java.awt.Color(0, 153, 204));
+        jLabel1.setBackground(new java.awt.Color(231, 32, 83));
         jLabel1.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText(" Nome Fantasia");
+        jLabel1.setText(" Nome Cliente*");
         jLabel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel1.setOpaque(true);
 
-        jLabel3.setBackground(new java.awt.Color(0, 153, 204));
+        jLabel3.setBackground(new java.awt.Color(231, 32, 83));
         jLabel3.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText(" CNPJ");
+        jLabel3.setText(" CPF");
         jLabel3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel3.setOpaque(true);
 
-        jLabel5.setBackground(new java.awt.Color(0, 153, 204));
+        jLabel5.setBackground(new java.awt.Color(231, 32, 83));
         jLabel5.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText(" Email");
         jLabel5.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel5.setOpaque(true);
 
-        jLabel6.setBackground(new java.awt.Color(0, 153, 204));
+        jLabel6.setBackground(new java.awt.Color(231, 32, 83));
         jLabel6.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText(" Observação");
@@ -117,27 +121,24 @@ public class JFrameFornecedor extends javax.swing.JFrame {
         campoObservacao.setRows(5);
         jScrollPane1.setViewportView(campoObservacao);
 
-        jLabel8.setBackground(new java.awt.Color(0, 153, 204));
-        jLabel8.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel8.setText(" Telefone");
-        jLabel8.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-        jLabel8.setOpaque(true);
-
-        jLabel9.setBackground(new java.awt.Color(0, 153, 204));
-        jLabel9.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setText(" Representante");
-        jLabel9.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-        jLabel9.setOpaque(true);
-
         try {
-            campoCNPJ.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##.###.###/####-##")));
+            campoCPF.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.###.###-##")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
 
-        jLabel12.setBackground(new java.awt.Color(0, 153, 204));
+        campoEmail.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                campoEmailFocusLost(evt);
+            }
+        });
+        campoEmail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                campoEmailActionPerformed(evt);
+            }
+        });
+
+        jLabel12.setBackground(new java.awt.Color(231, 32, 83));
         jLabel12.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel12.setForeground(new java.awt.Color(255, 255, 255));
         jLabel12.setText(" Celular");
@@ -150,6 +151,29 @@ public class JFrameFornecedor extends javax.swing.JFrame {
             ex.printStackTrace();
         }
 
+        jLabel7.setBackground(new java.awt.Color(231, 32, 83));
+        jLabel7.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setText(" RG");
+        jLabel7.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        jLabel7.setOpaque(true);
+
+        jLabel2.setBackground(new java.awt.Color(231, 32, 83));
+        jLabel2.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(231, 32, 83));
+        jLabel2.setText("Campos com * são obrigatórios");
+
+        campoRG.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                campoRGFocusLost(evt);
+            }
+        });
+        campoRG.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                campoRGActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -158,98 +182,90 @@ public class JFrameFornecedor extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(campoRepresentante))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(campoNomeFantasia))
+                        .addComponent(campoNomeCompleto))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 593, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(campoCNPJ, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(campoEmail))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(campoTelefone))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(campoCelular, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(146, Short.MAX_VALUE))
+                        .addComponent(campoCelular, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel2)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(campoRG))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(campoCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        jPanel2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {campoCNPJ, campoCelular});
-
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(campoNomeFantasia, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                    .addComponent(campoNomeCompleto, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(campoRG, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
-                    .addComponent(campoCNPJ))
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(campoCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(campoEmail, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(campoTelefone, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
-                    .addComponent(campoCelular))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(campoRepresentante, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
+                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(campoCelular, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(75, 75, 75))
+                .addGap(101, 101, 101)
+                .addComponent(jLabel2)
+                .addContainerGap())
         );
 
         abasPanel.addTab("Cadastro", jPanel2);
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setBackground(new java.awt.Color(255, 204, 255));
 
-        jLabel4.setBackground(new java.awt.Color(0, 153, 204));
+        jLabel4.setBackground(new java.awt.Color(231, 32, 83));
         jLabel4.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText(" Número");
         jLabel4.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel4.setOpaque(true);
 
-        jLabel10.setBackground(new java.awt.Color(0, 153, 204));
+        jLabel10.setBackground(new java.awt.Color(231, 32, 83));
         jLabel10.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(255, 255, 255));
         jLabel10.setText(" Cidade");
         jLabel10.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel10.setOpaque(true);
 
-        jLabel11.setBackground(new java.awt.Color(0, 153, 204));
+        jLabel11.setBackground(new java.awt.Color(231, 32, 83));
         jLabel11.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel11.setForeground(new java.awt.Color(255, 255, 255));
         jLabel11.setText(" Bairro");
         jLabel11.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel11.setOpaque(true);
 
-        jLabel13.setBackground(new java.awt.Color(0, 153, 204));
+        jLabel13.setBackground(new java.awt.Color(231, 32, 83));
         jLabel13.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel13.setForeground(new java.awt.Color(255, 255, 255));
         jLabel13.setText(" CEP");
@@ -262,12 +278,16 @@ public class JFrameFornecedor extends javax.swing.JFrame {
             ex.printStackTrace();
         }
 
-        jLabel14.setBackground(new java.awt.Color(0, 153, 204));
+        jLabel14.setBackground(new java.awt.Color(231, 32, 83));
         jLabel14.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel14.setForeground(new java.awt.Color(255, 255, 255));
         jLabel14.setText(" Logradouro");
         jLabel14.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel14.setOpaque(true);
+
+        jLabel8.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 0, 0));
+        jLabel8.setText("Campos com * são obrigatórios");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -277,29 +297,34 @@ public class JFrameFornecedor extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(campoCidade))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(campoLogradouro))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(campoNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(campoCidade))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(campoCEP, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                                .addComponent(campoLogradouro))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(campoNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(campoCEP, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(campoBairro, javax.swing.GroupLayout.DEFAULT_SIZE, 531, Short.MAX_VALUE)))
+                        .addGap(77, 77, 77))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(campoBairro, javax.swing.GroupLayout.DEFAULT_SIZE, 662, Short.MAX_VALUE)))
-                .addGap(77, 77, 77))
+                        .addComponent(jLabel8)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -324,12 +349,14 @@ public class JFrameFornecedor extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(campoCidade, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
-                .addGap(270, 270, 270))
+                .addGap(237, 237, 237)
+                .addComponent(jLabel8)
+                .addContainerGap())
         );
 
         abasPanel.addTab("Endereço", jPanel1);
 
-        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.setBackground(new java.awt.Color(255, 204, 255));
 
         tabelaConsulta.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -342,6 +369,11 @@ public class JFrameFornecedor extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tabelaConsulta.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabelaConsultaMouseClicked(evt);
+            }
+        });
         tabelaConsulta.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 tabelaConsultaKeyReleased(evt);
@@ -349,26 +381,46 @@ public class JFrameFornecedor extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(tabelaConsulta);
 
+        jLabel15.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        jLabel15.setForeground(new java.awt.Color(231, 32, 83));
+        jLabel15.setText("Clique duas vezes na linha que deseja editar ou consultar");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 918, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel15)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 787, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 505, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(64, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel15)
+                .addContainerGap())
         );
 
         abasPanel.addTab("Consulta", jPanel3);
 
+        btnGravar.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 18)); // NOI18N
+        btnGravar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/save.png"))); // NOI18N
+        btnGravar.setText("Gravar");
+        btnGravar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGravarActionPerformed(evt);
+            }
+        });
+
         btnNovo.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 18)); // NOI18N
+        btnNovo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/new.png"))); // NOI18N
         btnNovo.setText("Novo");
         btnNovo.setEnabled(false);
         btnNovo.addActionListener(new java.awt.event.ActionListener() {
@@ -377,15 +429,8 @@ public class JFrameFornecedor extends javax.swing.JFrame {
             }
         });
 
-        btnGravar.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 18)); // NOI18N
-        btnGravar.setText("Gravar");
-        btnGravar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGravarActionPerformed(evt);
-            }
-        });
-
         btnExcluir.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 18)); // NOI18N
+        btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/excluir (2).png"))); // NOI18N
         btnExcluir.setText("Excluir");
         btnExcluir.setEnabled(false);
         btnExcluir.addActionListener(new java.awt.event.ActionListener() {
@@ -399,20 +444,15 @@ public class JFrameFornecedor extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(abasPanel)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(btnGravar, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(25, 25, 25)
+                .addComponent(btnGravar, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
+            .addComponent(abasPanel)
         );
-
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnExcluir, btnGravar, btnNovo});
-
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -425,104 +465,131 @@ public class JFrameFornecedor extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnExcluir, btnGravar, btnNovo});
-
-        setSize(new java.awt.Dimension(1105, 742));
+        setSize(new java.awt.Dimension(959, 742));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void campoEmailFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_campoEmailFocusLost
+        if(Mascaras.testaEmail(campoEmail.getText())){
+            System.out.println("valor valido");
+        } else {
+            System.out.println("valor invalido");
+        }
+    }//GEN-LAST:event_campoEmailFocusLost
+
+    private void campoEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoEmailActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_campoEmailActionPerformed
+
+    private void campoRGFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_campoRGFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_campoRGFocusLost
+
+    private void campoRGActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoRGActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_campoRGActionPerformed
+
+    private void tabelaConsultaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaConsultaMouseClicked
+        if (evt.getClickCount() == 2) {
+            this.preencherCampos();
+        }
+    }//GEN-LAST:event_tabelaConsultaMouseClicked
+
+    private void tabelaConsultaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelaConsultaKeyReleased
+
+    }//GEN-LAST:event_tabelaConsultaKeyReleased
+
+    private void btnGravarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGravarActionPerformed
+        try {
+            if (StringUtils.isNotBlank(campoNomeCompleto.getText()) || StringUtils.isNotBlank(campoCelular.getText())) {
+                JOptionPane.showMessageDialog(this, "Todos os campos com * (asterisco) são obrigatórios!", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+            } else if (!Mascaras.testaEmail(campoEmail.getText())) {
+                JOptionPane.showMessageDialog(this, "Preencha o campo Email com um email válido!", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+            } else {
+                this.buildCliente();
+                if(codigo != null){
+                    this.repository.update(cliente);
+                } else {
+                    cliente = this.repository.save(cliente);
+                    codigo = cliente.getId();
+                }
+                this.preencheConsulta();
+                btnNovo.setEnabled(true);
+                btnExcluir.setEnabled(true);
+
+                JOptionPane.showMessageDialog(this, "Cliente salvo com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (HeadlessException | SQLException ex) {
+            System.out.println(ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar salvar o Cliente", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnGravarActionPerformed
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
         this.limparCampos();
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        int dialogResult = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir o fornecedor?","Galera de casa aí, comé que é, meu",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        int dialogResult = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir o cliente?","Galera de casa aí, como que é, meu?",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if(dialogResult == JOptionPane.YES_OPTION){
             try {
-                repository.delete(fornecedor);
+                repository.delete(cliente);
                 this.limparCampos();
-                JOptionPane.showMessageDialog(this, "Fornecedor excluído com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
+                this.preencheConsulta();
+                JOptionPane.showMessageDialog(this, "Cliente excluído com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
             } catch (SQLException ex) {
                 System.out.println(ex.getMessage());
-                JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar excluir o Fornecedor", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar excluir o Cliente", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btnExcluirActionPerformed
-
-    private void btnGravarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGravarActionPerformed
-        try {
-            this.buildFornecedor();
-            if(codigo != null){
-                this.repository.update(fornecedor);
-            } else {
-                fornecedor = this.repository.save(fornecedor);
-                codigo = fornecedor.getId();
-            }
-            this.preencheConsulta();
-            btnNovo.setEnabled(true);
-            btnExcluir.setEnabled(true);
-            JOptionPane.showMessageDialog(this, "Fornecedor salvo com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar salvar o Fornecedor", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_btnGravarActionPerformed
-
-    private void tabelaConsultaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelaConsultaKeyReleased
-       if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            this.preencherCampos();
-        }
-    }//GEN-LAST:event_tabelaConsultaKeyReleased
-
-    private void buildFornecedor(){
-        fornecedor = FornecedorModel.builder()
+private void buildCliente(){
+        cliente = ClienteModel.builder()
                 .id(codigo)
-                .nomeFantasia(campoNomeFantasia.getText())
-                .cnpj(campoCNPJ.getText().replaceAll("[^0-9]", ""))
-                .telefone(campoTelefone.getText())
-                .celular(campoCelular.getText().replaceAll("[^0-9]", ""))
+                .nome(campoNomeCompleto.getText())
+                .rg(campoRG.getText())
+                .cpf(campoCPF.getText().replaceAll("[^0-9]", ""))
+                .telefone(campoCelular.getText().replaceAll("[^0-9]", ""))
                 .email(campoEmail.getText())
-                .representante(campoRepresentante.getText())
                 .obs(campoObservacao.getText())
                 .build();
-        fornecedor.setEndereco(campoLogradouro.getText());
-        fornecedor.setNumero(campoNumero.getText());
-        fornecedor.setBairro(campoBairro.getText());
-        fornecedor.setCidade(campoCidade.getText());
-        fornecedor.setCep(campoCEP.getText().replaceAll("[^0-9]", ""));
+        cliente.setEndereco(campoLogradouro.getText());
+        cliente.setNumero(campoNumero.getText());
+        cliente.setBairro(campoBairro.getText());
+        cliente.setCidade(campoCidade.getText());
+        cliente.setCep(campoCEP.getText().replaceAll("[^0-9]", ""));
     }
-    
+
     private void preencherCampos(){
         try {
             codigo = Long.parseLong(tabelaConsulta.getValueAt(tabelaConsulta.getSelectedRow(), 0).toString());
             abasPanel.setSelectedIndex(0);
-            fornecedor = repository.findOne(FornecedorModel.builder().id(codigo).build());
-            campoNomeFantasia.setText(fornecedor.getNomeFantasia());
-            campoCNPJ.setText(fornecedor.getCnpj());
-            campoTelefone.setText(fornecedor.getTelefone());
-            campoCelular.setText(fornecedor.getCelular());
-            campoEmail.setText(fornecedor.getEmail());
-            campoRepresentante.setText(fornecedor.getRepresentante());
-            campoObservacao.setText(fornecedor.getObs());
-            campoLogradouro.setText(fornecedor.getEndereco());
-            campoNumero.setText(fornecedor.getNumero());
-            campoBairro.setText(fornecedor.getBairro());
-            campoCidade.setText(fornecedor.getCidade());
-            campoCEP.setText(fornecedor.getCep());
-            
+            cliente = repository.findOne(ClienteModel.builder().id(codigo).build());
+            campoNomeCompleto.setText(cliente.getNome());
+            campoRG.setText(cliente.getRg());
+            campoCPF.setText(cliente.getCpf());
+            campoCelular.setText(cliente.getTelefone());
+            campoEmail.setText(cliente.getEmail());
+            campoObservacao.setText(cliente.getObs());
+            campoLogradouro.setText(cliente.getEndereco());
+            campoNumero.setText(cliente.getNumero());
+            campoBairro.setText(cliente.getBairro());
+            campoCidade.setText(cliente.getCidade());
+            campoCEP.setText(cliente.getCep());
+
             btnNovo.setEnabled(true);
             btnExcluir.setEnabled(true);
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
-            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar carregar o Fornecedor", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar carregar o Cliente", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
     private void preencheConsulta() {
         DefaultTableModel model = new DefaultTableModel(
                 new Object[][]{},
-                //aqui a construçao do cabeçalho        
-                new String[]{"CÓD.", "NOME FANTASIA", "CNPJ"}) {
+                //aqui a construÃ¯Â¿Â½ao do cabeÃ¯Â¿Â½alho
+                new String[]{"CÓD.", "NOME COMPLETO", "CPF"}) {
                     Class[] types = new Class[]{
                         //para cada coluna acrescentar mais um construtor
                         java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
@@ -538,14 +605,14 @@ public class JFrameFornecedor extends javax.swing.JFrame {
                         return canEdit[columnIndex];
                     }
                 };
-        
+
         try {
-            repository.findAll().forEach((fornecedorUnique) -> {
-                model.addRow(new String[]{String.valueOf(fornecedorUnique.getId()), fornecedorUnique.getNomeFantasia(), Mascaras.converteCNPJ(fornecedorUnique.getCnpj())});
+            repository.findAll().forEach((clienteUnique) -> {
+                model.addRow(new String[]{String.valueOf(clienteUnique.getId()), clienteUnique.getNome(), clienteUnique.getCpf()});
             });
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
-            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar carregar os Fornecedores", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar carregar os Clientes", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
         }
 
         tabelaConsulta.setModel(model);
@@ -558,15 +625,14 @@ public class JFrameFornecedor extends javax.swing.JFrame {
         tabelaConsulta.getColumnModel().getColumn(2).setResizable(false);
         tabelaConsulta.getColumnModel().getColumn(2).setPreferredWidth(220);
     }
-    
+
     private void limparCampos(){
         codigo = null;
-        campoNomeFantasia.setText(null);
-        campoCNPJ.setText(null);
-        campoTelefone.setText(null);
+        campoNomeCompleto.setText(null);
+        campoRG.setText(null);
+        campoCPF.setText(null);
         campoCelular.setText(null);
         campoEmail.setText(null);
-        campoRepresentante.setText(null);
         campoObservacao.setText(null);
         campoLogradouro.setText(null);
         campoNumero.setText(null);
@@ -594,14 +660,23 @@ public class JFrameFornecedor extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(JFrameFornecedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(JFrameCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(JFrameCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(JFrameCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(JFrameCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            new JFrameFornecedor().setVisible(true);
+            new JFrameCliente().setVisible(true);
         });
     }
 
@@ -612,28 +687,29 @@ public class JFrameFornecedor extends javax.swing.JFrame {
     private javax.swing.JButton btnNovo;
     private javax.swing.JTextField campoBairro;
     private javax.swing.JFormattedTextField campoCEP;
-    private javax.swing.JFormattedTextField campoCNPJ;
+    private javax.swing.JFormattedTextField campoCPF;
     private javax.swing.JFormattedTextField campoCelular;
     private javax.swing.JTextField campoCidade;
     private javax.swing.JTextField campoEmail;
     private javax.swing.JTextField campoLogradouro;
-    private javax.swing.JTextField campoNomeFantasia;
+    private javax.swing.JTextField campoNomeCompleto;
     private javax.swing.JTextField campoNumero;
     private javax.swing.JTextArea campoObservacao;
-    private javax.swing.JTextField campoRepresentante;
-    private javax.swing.JTextField campoTelefone;
+    private javax.swing.JTextField campoRG;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

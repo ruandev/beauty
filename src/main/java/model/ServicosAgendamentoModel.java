@@ -13,5 +13,6 @@ public class ServicosAgendamentoModel {
     Long id;
     AgendamentoModel agendamento;
     ServicoModel servico;
+    FuncionarioModel funcionario;
     String obs;
 }

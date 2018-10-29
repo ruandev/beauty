@@ -50,7 +50,7 @@ public class ServicosRepository extends BaseRepository {
     public List<ServicoModel> findAll() throws SQLException {
         List<ServicoModel> listServicos = new ArrayList<>();
 
-        preparaComandoSql("select * from SERVICO");
+        preparaComandoSql("select * from SERVICO order by descricao");
         try (ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 ServicoModel servico = ServicoModel.builder()

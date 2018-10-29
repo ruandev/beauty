@@ -3,31 +3,30 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ui.cadatros;
+package ui.cadastros;
 
 import com.mysql.cj.util.StringUtils;
-import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import model.ClienteModel;
-import repository.ClienteRepository;
+import model.FuncionarioModel;
+import repository.FuncionarioRepository;
 import utils.Mascaras;
 
 /**
  *
  * @author skate
  */
-public class JFrameCliente extends javax.swing.JFrame {
-    ClienteModel cliente;
-    ClienteRepository repository;
+public class JFrameFuncionario extends javax.swing.JFrame {
+FuncionarioModel funcionario;
+    FuncionarioRepository repository;
     Long codigo;
     /**
-     * Creates new form JFramePrincipal
+     * Creates new form Funcionario
      */
-    public JFrameCliente() {
+    public JFrameFuncionario() {
         initComponents();
-        repository = new ClienteRepository();
+        repository = new FuncionarioRepository();
         btnNovo.setEnabled(false);
         btnExcluir.setEnabled(false);
         preencheConsulta();
@@ -74,40 +73,43 @@ public class JFrameCliente extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tabelaConsulta = new javax.swing.JTable();
-        btnNovo = new javax.swing.JButton();
+        jLabel15 = new javax.swing.JLabel();
         btnGravar = new javax.swing.JButton();
+        btnNovo = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
 
-        setTitle("Cadastro de Clientes");
-        setResizable(false);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Cadastro de Funcionario");
 
+        abasPanel.setBackground(new java.awt.Color(255, 204, 255));
         abasPanel.setTabPlacement(javax.swing.JTabbedPane.LEFT);
         abasPanel.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 20)); // NOI18N
+        abasPanel.setOpaque(true);
 
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setBackground(new java.awt.Color(255, 204, 255));
 
-        jLabel1.setBackground(new java.awt.Color(0, 153, 204));
+        jLabel1.setBackground(new java.awt.Color(231, 32, 83));
         jLabel1.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText(" Nome Cliente*");
+        jLabel1.setText(" Nome Funcionario*");
         jLabel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel1.setOpaque(true);
 
-        jLabel3.setBackground(new java.awt.Color(0, 153, 204));
+        jLabel3.setBackground(new java.awt.Color(231, 32, 83));
         jLabel3.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText(" CPF");
         jLabel3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel3.setOpaque(true);
 
-        jLabel5.setBackground(new java.awt.Color(0, 153, 204));
+        jLabel5.setBackground(new java.awt.Color(231, 32, 83));
         jLabel5.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText(" Email");
         jLabel5.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel5.setOpaque(true);
 
-        jLabel6.setBackground(new java.awt.Color(0, 153, 204));
+        jLabel6.setBackground(new java.awt.Color(231, 32, 83));
         jLabel6.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText(" Observação");
@@ -129,11 +131,16 @@ public class JFrameCliente extends javax.swing.JFrame {
                 campoEmailFocusLost(evt);
             }
         });
+        campoEmail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                campoEmailActionPerformed(evt);
+            }
+        });
 
-        jLabel12.setBackground(new java.awt.Color(0, 153, 204));
+        jLabel12.setBackground(new java.awt.Color(231, 32, 83));
         jLabel12.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel12.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel12.setText(" Celular*");
+        jLabel12.setText(" Celular");
         jLabel12.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel12.setOpaque(true);
 
@@ -143,7 +150,7 @@ public class JFrameCliente extends javax.swing.JFrame {
             ex.printStackTrace();
         }
 
-        jLabel7.setBackground(new java.awt.Color(0, 153, 204));
+        jLabel7.setBackground(new java.awt.Color(231, 32, 83));
         jLabel7.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText(" RG");
@@ -157,7 +164,7 @@ public class JFrameCliente extends javax.swing.JFrame {
         }
 
         jLabel2.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 0, 0));
+        jLabel2.setForeground(new java.awt.Color(231, 32, 83));
         jLabel2.setText("Campos com * são obrigatórios");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -193,11 +200,8 @@ public class JFrameCliente extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(campoRG, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel2))
-                .addContainerGap(146, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        jPanel2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {campoCPF, campoCelular});
-
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -232,30 +236,30 @@ public class JFrameCliente extends javax.swing.JFrame {
 
         abasPanel.addTab("Cadastro", jPanel2);
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setBackground(new java.awt.Color(255, 204, 255));
 
-        jLabel4.setBackground(new java.awt.Color(0, 153, 204));
+        jLabel4.setBackground(new java.awt.Color(231, 32, 83));
         jLabel4.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel4.setText(" Número*");
+        jLabel4.setText(" Número");
         jLabel4.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel4.setOpaque(true);
 
-        jLabel10.setBackground(new java.awt.Color(0, 153, 204));
+        jLabel10.setBackground(new java.awt.Color(231, 32, 83));
         jLabel10.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel10.setText(" Cidade*");
+        jLabel10.setText(" Cidade");
         jLabel10.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel10.setOpaque(true);
 
-        jLabel11.setBackground(new java.awt.Color(0, 153, 204));
+        jLabel11.setBackground(new java.awt.Color(231, 32, 83));
         jLabel11.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel11.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel11.setText(" Bairro*");
+        jLabel11.setText(" Bairro");
         jLabel11.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel11.setOpaque(true);
 
-        jLabel13.setBackground(new java.awt.Color(0, 153, 204));
+        jLabel13.setBackground(new java.awt.Color(231, 32, 83));
         jLabel13.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel13.setForeground(new java.awt.Color(255, 255, 255));
         jLabel13.setText(" CEP");
@@ -268,15 +272,15 @@ public class JFrameCliente extends javax.swing.JFrame {
             ex.printStackTrace();
         }
 
-        jLabel14.setBackground(new java.awt.Color(0, 153, 204));
+        jLabel14.setBackground(new java.awt.Color(231, 32, 83));
         jLabel14.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel14.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel14.setText(" Logradouro*");
+        jLabel14.setText(" Logradouro");
         jLabel14.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel14.setOpaque(true);
 
         jLabel8.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(255, 0, 0));
+        jLabel8.setForeground(new java.awt.Color(231, 32, 83));
         jLabel8.setText("Campos com * são obrigatórios");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -310,7 +314,7 @@ public class JFrameCliente extends javax.swing.JFrame {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(campoBairro, javax.swing.GroupLayout.DEFAULT_SIZE, 662, Short.MAX_VALUE)))
+                                .addComponent(campoBairro, javax.swing.GroupLayout.DEFAULT_SIZE, 531, Short.MAX_VALUE)))
                         .addGap(77, 77, 77))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel8)
@@ -346,7 +350,7 @@ public class JFrameCliente extends javax.swing.JFrame {
 
         abasPanel.addTab("Endereço", jPanel1);
 
-        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.setBackground(new java.awt.Color(255, 204, 255));
 
         tabelaConsulta.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -359,6 +363,11 @@ public class JFrameCliente extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tabelaConsulta.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabelaConsultaMouseClicked(evt);
+            }
+        });
         tabelaConsulta.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 tabelaConsultaKeyReleased(evt);
@@ -366,26 +375,47 @@ public class JFrameCliente extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(tabelaConsulta);
 
+        jLabel15.setBackground(new java.awt.Color(231, 32, 83));
+        jLabel15.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        jLabel15.setForeground(new java.awt.Color(231, 32, 83));
+        jLabel15.setText("Clique duas vezes na linha que deseja editar ou consultar");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 918, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel15)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 787, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 505, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(64, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel15)
+                .addContainerGap())
         );
 
         abasPanel.addTab("Consulta", jPanel3);
 
+        btnGravar.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 18)); // NOI18N
+        btnGravar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/save.png"))); // NOI18N
+        btnGravar.setText("Gravar");
+        btnGravar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGravarActionPerformed(evt);
+            }
+        });
+
         btnNovo.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 18)); // NOI18N
+        btnNovo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/new.png"))); // NOI18N
         btnNovo.setText("Novo");
         btnNovo.setEnabled(false);
         btnNovo.addActionListener(new java.awt.event.ActionListener() {
@@ -394,15 +424,8 @@ public class JFrameCliente extends javax.swing.JFrame {
             }
         });
 
-        btnGravar.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 18)); // NOI18N
-        btnGravar.setText("Gravar");
-        btnGravar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGravarActionPerformed(evt);
-            }
-        });
-
         btnExcluir.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 18)); // NOI18N
+        btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/excluir (2).png"))); // NOI18N
         btnExcluir.setText("Excluir");
         btnExcluir.setEnabled(false);
         btnExcluir.addActionListener(new java.awt.event.ActionListener() {
@@ -415,26 +438,21 @@ public class JFrameCliente extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(abasPanel)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(btnGravar, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnGravar, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
+            .addComponent(abasPanel)
         );
-
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnExcluir, btnGravar, btnNovo});
-
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(abasPanel)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGravar, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -442,144 +460,145 @@ public class JFrameCliente extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnExcluir, btnGravar, btnNovo});
-
-        setSize(new java.awt.Dimension(1105, 742));
+        setSize(new java.awt.Dimension(959, 733));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
-        this.limparCampos();
-    }//GEN-LAST:event_btnNovoActionPerformed
-
-    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        int dialogResult = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir o cliente?","Galera de casa aí, comé que é, meu?",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-        if(dialogResult == JOptionPane.YES_OPTION){
-            try {
-                repository.delete(cliente);
-                this.limparCampos();
-                JOptionPane.showMessageDialog(this, "Cliente excluído com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
-            } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
-                JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar excluir o Cliente", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }//GEN-LAST:event_btnExcluirActionPerformed
-
-    private void btnGravarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGravarActionPerformed
-        try {
-            this.buildCliente();
-            if(StringUtils.isNullOrEmpty(cliente.getNome()) || StringUtils.isNullOrEmpty(cliente.getTelefone())
-                    || StringUtils.isNullOrEmpty(cliente.getEndereco()) || StringUtils.isNullOrEmpty(cliente.getNumero())
-                    || StringUtils.isNullOrEmpty(cliente.getBairro()) || StringUtils.isNullOrEmpty(cliente.getCidade())){
-                JOptionPane.showMessageDialog(this, "Todos os campos com * (asterisco) são obrigatórios!", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
-            } else if(!StringUtils.isNullOrEmpty(cliente.getEmail())){
-                if(Mascaras.testaEmail(cliente.getEmail())){
-                    JOptionPane.showMessageDialog(this, "Preencha o campo Email com um email válido !", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
-                }
-            } else {
-                if(codigo != null){
-                    this.repository.update(cliente);
-                } else {
-                    cliente = this.repository.save(cliente);
-                    codigo = cliente.getId();
-                }
-                this.preencheConsulta();
-                btnNovo.setEnabled(true);
-                btnExcluir.setEnabled(true);
-
-                JOptionPane.showMessageDialog(this, "Cliente salvo com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
-            }
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar salvar o Cliente", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_btnGravarActionPerformed
-
-    private void tabelaConsultaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelaConsultaKeyReleased
-       if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            this.preencherCampos();
-        }
-    }//GEN-LAST:event_tabelaConsultaKeyReleased
-
     private void campoEmailFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_campoEmailFocusLost
-        if(Mascaras.testaEmail(campoEmail.getText())){
+        if (Mascaras.testaEmail(campoEmail.getText())) {
             System.out.println("valor válido");
         } else {
             System.out.println("valor inválido");
         }
     }//GEN-LAST:event_campoEmailFocusLost
 
-    private void buildCliente(){
-        cliente = ClienteModel.builder()
+    private void campoEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoEmailActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_campoEmailActionPerformed
+
+    private void tabelaConsultaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaConsultaMouseClicked
+        if (evt.getClickCount() == 2) {
+            this.preencherCampos();
+        }
+    }//GEN-LAST:event_tabelaConsultaMouseClicked
+
+    private void tabelaConsultaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelaConsultaKeyReleased
+
+    }//GEN-LAST:event_tabelaConsultaKeyReleased
+
+    private void btnGravarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGravarActionPerformed
+        try {
+            if (StringUtils.isNullOrEmpty(campoNomeCompleto.getText()) || StringUtils.isNullOrEmpty(campoCelular.getText())) {
+                JOptionPane.showMessageDialog(this, "Todos os campos com * (asterisco) são obrigatórios!", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+            } else if (!Mascaras.testaEmail(campoEmail.getText())) {
+                JOptionPane.showMessageDialog(this, "Preencha o campo Email com um email válido!", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+            } else {
+                this.buildFuncionario();
+                if (codigo != null) {
+                    this.repository.update(funcionario);
+                } else {
+                    funcionario = this.repository.save(funcionario);
+                    codigo = funcionario.getId();
+                }
+                this.preencheConsulta();
+                btnNovo.setEnabled(true);
+                btnExcluir.setEnabled(true);
+
+                JOptionPane.showMessageDialog(this, "Funcionario salvo com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar salvar o Funcionario", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnGravarActionPerformed
+
+    private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
+        this.limparCampos();
+    }//GEN-LAST:event_btnNovoActionPerformed
+
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+        int dialogResult = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir o funcionario?", "Galera de casa aí, comé que é, meu?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (dialogResult == JOptionPane.YES_OPTION) {
+            try {
+                repository.delete(funcionario);
+                this.limparCampos();
+                this.preencheConsulta();
+                JOptionPane.showMessageDialog(this, "Funcionario excluído com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+                JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar excluir o Funcionario", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnExcluirActionPerformed
+
+    private void buildFuncionario() {
+        funcionario = FuncionarioModel.builder()
                 .id(codigo)
                 .nome(campoNomeCompleto.getText())
-                .rg(campoRG.getText().replaceAll("[^0-9]", ""))
                 .cpf(campoCPF.getText().replaceAll("[^0-9]", ""))
                 .telefone(campoCelular.getText().replaceAll("[^0-9]", ""))
                 .email(campoEmail.getText())
                 .obs(campoObservacao.getText())
                 .build();
-        cliente.setEndereco(campoLogradouro.getText());
-        cliente.setNumero(campoNumero.getText());
-        cliente.setBairro(campoBairro.getText());
-        cliente.setCidade(campoCidade.getText());
-        cliente.setCep(campoCEP.getText().replaceAll("[^0-9]", ""));
+        funcionario.setEndereco(campoLogradouro.getText());
+        funcionario.setNumero(campoNumero.getText());
+        funcionario.setBairro(campoBairro.getText());
+        funcionario.setCidade(campoCidade.getText());
+        funcionario.setCep(campoCEP.getText().replaceAll("[^0-9]", ""));
     }
-    
-    private void preencherCampos(){
+
+    private void preencherCampos() {
         try {
             codigo = Long.parseLong(tabelaConsulta.getValueAt(tabelaConsulta.getSelectedRow(), 0).toString());
             abasPanel.setSelectedIndex(0);
-            cliente = repository.findOne(ClienteModel.builder().id(codigo).build());
-            campoNomeCompleto.setText(cliente.getNome());
-            campoRG.setText(cliente.getRg());
-            campoCPF.setText(cliente.getCpf());
-            campoCelular.setText(cliente.getTelefone());
-            campoEmail.setText(cliente.getEmail());
-            campoObservacao.setText(cliente.getObs());
-            campoLogradouro.setText(cliente.getEndereco());
-            campoNumero.setText(cliente.getNumero());
-            campoBairro.setText(cliente.getBairro());
-            campoCidade.setText(cliente.getCidade());
-            campoCEP.setText(cliente.getCep());
-            
+            funcionario = repository.findOne(FuncionarioModel.builder().id(codigo).build());
+            campoNomeCompleto.setText(funcionario.getNome());
+            campoCPF.setText(funcionario.getCpf());
+            campoCelular.setText(funcionario.getTelefone());
+            campoEmail.setText(funcionario.getEmail());
+            campoObservacao.setText(funcionario.getObs());
+            campoLogradouro.setText(funcionario.getEndereco());
+            campoNumero.setText(funcionario.getNumero());
+            campoBairro.setText(funcionario.getBairro());
+            campoCidade.setText(funcionario.getCidade());
+            campoCEP.setText(funcionario.getCep());
+
             btnNovo.setEnabled(true);
             btnExcluir.setEnabled(true);
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
-            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar carregar o Cliente", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar carregar o Funcionario", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
     private void preencheConsulta() {
         DefaultTableModel model = new DefaultTableModel(
                 new Object[][]{},
-                //aqui a construçao do cabeçalho        
+                //aqui a construÃ¯Â¿Â½ao do cabeÃ¯Â¿Â½alho
                 new String[]{"CÓD.", "NOME COMPLETO", "CPF"}) {
-                    Class[] types = new Class[]{
-                        //para cada coluna acrescentar mais um construtor
-                        java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
-                    };
-                    //para cada coluna acrescentar mais um objetooo...
-                    boolean[] canEdit = new boolean[]{false, false, false};
+            Class[] types = new Class[]{
+                    //para cada coluna acrescentar mais um construtor
+                    java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+            };
+            //para cada coluna acrescentar mais um objetooo...
+            boolean[] canEdit = new boolean[]{false, false, false};
 
-                    public Class getColumnClass(int columnIndex) {
-                        return types[columnIndex];
-                    }
+            public Class getColumnClass(int columnIndex) {
+                return types[columnIndex];
+            }
 
-                    public boolean isCellEditable(int rowIndex, int columnIndex) {
-                        return canEdit[columnIndex];
-                    }
-                };
-        
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        };
+
         try {
-            repository.findAll().forEach((clienteUnique) -> {
-                model.addRow(new String[]{String.valueOf(clienteUnique.getId()), clienteUnique.getNome(), clienteUnique.getCpf()});
+            repository.findAll().forEach((funcionarioUnique) -> {
+                model.addRow(new String[]{String.valueOf(funcionarioUnique.getId()), funcionarioUnique.getNome(), funcionarioUnique.getCpf()});
             });
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
-            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar carregar os Clientes", "Errrrôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar carregar os Funcionarios", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
         }
 
         tabelaConsulta.setModel(model);
@@ -592,8 +611,8 @@ public class JFrameCliente extends javax.swing.JFrame {
         tabelaConsulta.getColumnModel().getColumn(2).setResizable(false);
         tabelaConsulta.getColumnModel().getColumn(2).setPreferredWidth(220);
     }
-    
-    private void limparCampos(){
+
+    private void limparCampos() {
         codigo = null;
         campoNomeCompleto.setText(null);
         campoRG.setText(null);
@@ -627,15 +646,29 @@ public class JFrameCliente extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(JFrameCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(JFrameFuncionario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(JFrameFuncionario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(JFrameFuncionario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(JFrameFuncionario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> {
-            new JFrameCliente().setVisible(true);
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new JFrameFuncionario().setVisible(true);
+            }
         });
     }
 
@@ -661,6 +694,7 @@ public class JFrameCliente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

@@ -62,7 +62,7 @@ public class FuncionarioRepository extends BaseRepository {
     }
 
     public List<FuncionarioModel> findAll() throws SQLException {
-        List<FuncionarioModel> listCliente = new ArrayList<>();
+        List<FuncionarioModel> listFuncionario = new ArrayList<>();
 
         preparaComandoSql("select * from FUNCIONARIO");
         try (ResultSet rs = stmt.executeQuery()) {
@@ -81,13 +81,13 @@ public class FuncionarioRepository extends BaseRepository {
                 funcionario.setBairro(rs.getString("bairro"));
                 funcionario.setCidade(rs.getString("cidade"));
                 funcionario.setCep(rs.getString("cep"));
-                
-                listCliente.add(funcionario);
+
+                listFuncionario.add(funcionario);
             }
         }
         finalizaConexao();
 
-        return listCliente;
+        return listFuncionario;
     }
 
     public FuncionarioModel findOne(FuncionarioModel filter)throws SQLException {
@@ -97,29 +97,46 @@ public class FuncionarioRepository extends BaseRepository {
 
         stmt.setLong(1, filter.getId());
 
-        ResultSet rs = stmt.executeQuery();
-
-        while (rs.next()) {
-           funcionario = FuncionarioModel.builder()
-                   .id(rs.getLong("id"))
-                   .nome(rs.getString("nome"))
-                   .telefone(rs.getString("telefone"))
-                   .cpf(rs.getString("cpf"))
-                   .obs(rs.getString("obs"))
-                   .email(rs.getString("email"))
-                   .build();
-           funcionario.setEndereco(rs.getString("endereco"));
-           funcionario.setNumero(rs.getString("numero"));
-           funcionario.setComplemento(rs.getString("complemento"));
-           funcionario.setBairro(rs.getString("bairro"));
-           funcionario.setCidade(rs.getString("cidade"));
-           funcionario.setCep(rs.getString("cep"));
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                funcionario = FuncionarioModel.builder()
+                        .id(rs.getLong("id"))
+                        .nome(rs.getString("nome"))
+                        .telefone(rs.getString("telefone"))
+                        .cpf(rs.getString("cpf"))
+                        .obs(rs.getString("obs"))
+                        .email(rs.getString("email"))
+                        .build();
+                funcionario.setEndereco(rs.getString("endereco"));
+                funcionario.setNumero(rs.getString("numero"));
+                funcionario.setComplemento(rs.getString("complemento"));
+                funcionario.setBairro(rs.getString("bairro"));
+                funcionario.setCidade(rs.getString("cidade"));
+                funcionario.setCep(rs.getString("cep"));
+            }
         }
-
-        rs.close();
         finalizaConexao();
 
         return funcionario;
     }
 
+    public List<FuncionarioModel> findAllCombo() throws SQLException {
+        List<FuncionarioModel> listFuncionario = new ArrayList<>();
+
+        preparaComandoSql("select id, nome from FUNCIONARIO order by nome");
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                FuncionarioModel cliente = FuncionarioModel.builder()
+                        .id(rs.getLong("id"))
+                        .nome(rs.getString("nome"))
+                        .build();
+
+                listFuncionario.add(cliente);
+            }
+        }
+        finalizaConexao();
+
+        return listFuncionario;
+    }
+    
 }

@@ -3,12 +3,12 @@ package repository;
 import model.CaixaModel;
 import model.MovimentoCaixaModel;
 import utils.Utils;
+import utils.VariaveisEstaticas;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import utils.VariaveisEstaticas;
 
 public class MovimentoCaixaRepository extends BaseRepository {
 
@@ -18,8 +18,8 @@ public class MovimentoCaixaRepository extends BaseRepository {
         preparaComandoSql(sql);
 
         stmt.setLong(1, movimento.getCaixa().getId());
-        stmt.setDouble(2, movimento.getValor());
-        stmt.setString(3, movimento.getDescricao());
+        stmt.setString(2, movimento.getDescricao());
+        stmt.setDouble(3, movimento.getValor());
         stmt.setBoolean(4, movimento.getEntrada());
         stmt.setString(5, movimento.getObs());
 
@@ -54,7 +54,7 @@ public class MovimentoCaixaRepository extends BaseRepository {
     }
     
     public Double somaEntradasByCaixa() throws SQLException{
-        Double soma = new Double(0);
+        Double soma = 0d;
         
         String sql = "select SUM(valor) as soma from movimento_caixa where id_caixa = ? and entrada = true";
         
@@ -73,7 +73,7 @@ public class MovimentoCaixaRepository extends BaseRepository {
     }
     
     public Double somaSaidasByCaixa() throws SQLException{
-        Double soma = new Double(0);
+        Double soma = 0d;
         
         String sql = "select SUM(valor) as soma from movimento_caixa where id_caixa = ? and entrada = false";
         

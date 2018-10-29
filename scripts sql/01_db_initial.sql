@@ -13,7 +13,6 @@ SET time_zone = "-03:00";
 --
 -- Database: `BEAUTY`
 --
-create database beauty;
 use beauty;
 -- --------------------------------------------------------
 
