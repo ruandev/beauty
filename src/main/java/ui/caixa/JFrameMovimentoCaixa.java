@@ -177,13 +177,13 @@ public class JFrameMovimentoCaixa extends javax.swing.JFrame {
         DefaultTableModel model = new DefaultTableModel(
                 new Object[][]{},
                 //aqui a construï¿½ao do cabeï¿½alho
-                new String[]{"DESCRIÇÃO", "HORA", "VALOR"}) {
+                new String[]{"DESCRIÇÃO", "HORA", "FORMA DE ENTRADA","VALOR"}) {
             Class[] types = new Class[]{
                 //para cada coluna acrescentar mais um construtor
-                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
             //para cada coluna acrescentar mais um objetooo...
-            boolean[] canEdit = new boolean[]{false, false, false};
+            boolean[] canEdit = new boolean[]{false, false, false, false};
 
             public Class getColumnClass(int columnIndex) {
                 return types[columnIndex];
@@ -195,7 +195,7 @@ public class JFrameMovimentoCaixa extends javax.swing.JFrame {
         };
 
         repository.listarMovimentoPorCaixa(CaixaModel.builder().id(VariaveisEstaticas.codigoCaixa).build(), true).forEach((movimento) -> {
-            model.addRow(new Object[]{movimento.getDescricao(), Utils.formatLocalDateTime(movimento.getDataHoraMovimento(), "HH:mm"), Mascaras.monetario.format(movimento.getValor())});
+            model.addRow(new Object[]{movimento.getDescricao(), Utils.formatLocalDateTime(movimento.getDataHoraMovimento(), "HH:mm"), movimento.getFormaEntrada(), Mascaras.monetario.format(movimento.getValor())});
         });
 
         tabelaEntradas.setModel(model);
@@ -207,6 +207,8 @@ public class JFrameMovimentoCaixa extends javax.swing.JFrame {
         tabelaEntradas.getColumnModel().getColumn(1).setPreferredWidth(100);
         tabelaEntradas.getColumnModel().getColumn(2).setResizable(false);
         tabelaEntradas.getColumnModel().getColumn(2).setPreferredWidth(200);
+        tabelaEntradas.getColumnModel().getColumn(3).setResizable(false);
+        tabelaEntradas.getColumnModel().getColumn(3).setPreferredWidth(200);
     }
 
     private void preencherSaidas() throws SQLException {

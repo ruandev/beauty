@@ -13,7 +13,7 @@ import java.util.List;
 public class MovimentoCaixaRepository extends BaseRepository {
 
     public void inserirMovimentoCaixa(MovimentoCaixaModel movimento) throws SQLException {
-        String sql = "insert into MOVIMENTO_CAIXA (id_caixa, data_hora, descricao, valor, entrada, obs) values (?,now(),?,?,?,?)";
+        String sql = "insert into MOVIMENTO_CAIXA (id_caixa, data_hora, descricao, valor, entrada, obs, forma_entrada) values (?,now(),?,?,?,?,?)";
 
         preparaComandoSql(sql);
 
@@ -22,6 +22,7 @@ public class MovimentoCaixaRepository extends BaseRepository {
         stmt.setDouble(3, movimento.getValor());
         stmt.setBoolean(4, movimento.getEntrada());
         stmt.setString(5, movimento.getObs());
+        stmt.setString(6, movimento.getFormaEntrada());
 
         executaFinalizandoConexao();
     }
@@ -29,7 +30,7 @@ public class MovimentoCaixaRepository extends BaseRepository {
     public List<MovimentoCaixaModel> listarMovimentoPorCaixa(CaixaModel caixa, Boolean entrada) throws SQLException {
         List<MovimentoCaixaModel> listMovimento = new ArrayList<>();
 
-        String sql = "select mov.id, mov.data_hora, mov.valor, mov.entrada, mov.descricao from movimento_caixa mov where mov.id_caixa = ? and entrada = ?";
+        String sql = "select mov.id, mov.data_hora, mov.valor, mov.entrada, mov.descricao,mov.forma_entrada from movimento_caixa mov where mov.id_caixa = ? and entrada = ?";
 
         preparaComandoSql(sql);
 
@@ -45,6 +46,7 @@ public class MovimentoCaixaRepository extends BaseRepository {
                         .entrada(rs.getBoolean("mov.entrada"))
                         .valor(rs.getDouble("mov.valor"))
                         .descricao(rs.getString("mov.descricao"))
+                        .formaEntrada(rs.getString("mov.forma_entrada"))
                         .build());
             }
         }

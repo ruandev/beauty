@@ -501,7 +501,7 @@ public class JFrameCliente extends javax.swing.JFrame {
 
     private void btnGravarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGravarActionPerformed
         try {
-            if (StringUtils.isNotBlank(campoNomeCompleto.getText()) || StringUtils.isNotBlank(campoCelular.getText())) {
+            if (StringUtils.isBlank(campoNomeCompleto.getText())) {
                 JOptionPane.showMessageDialog(this, "Todos os campos com * (asterisco) são obrigatórios!", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
             } else if (!Mascaras.testaEmail(campoEmail.getText())) {
                 JOptionPane.showMessageDialog(this, "Preencha o campo Email com um email válido!", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);

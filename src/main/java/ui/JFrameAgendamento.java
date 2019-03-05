@@ -38,6 +38,7 @@ import utils.Utils;
  * @author skate
  */
 public class JFrameAgendamento extends javax.swing.JFrame {
+
     List<ClienteModel> listClientes;
     List<FuncionarioModel> listFuncionarios;
     List<ServicoModel> listServicos;
@@ -46,6 +47,7 @@ public class JFrameAgendamento extends javax.swing.JFrame {
     ServicosAgendamentoRepository servicoAgendamentoRepository;
     AgendamentoModel agendamento;
     private Long codigo;
+
     /**
      * Creates new form JFrameAgendamento
      */
@@ -86,6 +88,8 @@ public class JFrameAgendamento extends javax.swing.JFrame {
         comboServico = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
+        campoValor = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
         campoObs = new javax.swing.JTextArea();
         jLabel7 = new javax.swing.JLabel();
@@ -99,7 +103,8 @@ public class JFrameAgendamento extends javax.swing.JFrame {
         btnExcluir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Agendamento");
+        setTitle("Atendimento");
+        setExtendedState(6);
 
         abasPanel.setBackground(new java.awt.Color(255, 204, 255));
         abasPanel.setTabPlacement(javax.swing.JTabbedPane.LEFT);
@@ -111,14 +116,14 @@ public class JFrameAgendamento extends javax.swing.JFrame {
         jLabel1.setBackground(new java.awt.Color(231, 32, 83));
         jLabel1.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText(" Nome Cliente");
+        jLabel1.setText(" Nome Cliente*");
         jLabel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel1.setOpaque(true);
 
         jLabel2.setBackground(new java.awt.Color(231, 32, 83));
         jLabel2.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText(" Data");
+        jLabel2.setText(" Data*");
         jLabel2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel2.setOpaque(true);
 
@@ -142,7 +147,7 @@ public class JFrameAgendamento extends javax.swing.JFrame {
         jLabel4.setBackground(new java.awt.Color(231, 32, 83));
         jLabel4.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel4.setText(" Hora");
+        jLabel4.setText(" Hora*");
         jLabel4.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel4.setOpaque(true);
 
@@ -166,6 +171,12 @@ public class JFrameAgendamento extends javax.swing.JFrame {
         jLabel3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel3.setOpaque(true);
 
+        comboServico.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                comboServicoItemStateChanged(evt);
+            }
+        });
+
         jLabel6.setBackground(new java.awt.Color(231, 32, 83));
         jLabel6.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
@@ -177,6 +188,19 @@ public class JFrameAgendamento extends javax.swing.JFrame {
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
+            }
+        });
+
+        jLabel8.setBackground(new java.awt.Color(231, 32, 83));
+        jLabel8.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText(" Valor");
+        jLabel8.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        jLabel8.setOpaque(true);
+
+        campoValor.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                campoValorFocusLost(evt);
             }
         });
 
@@ -194,9 +218,15 @@ public class JFrameAgendamento extends javax.swing.JFrame {
                         .addGap(0, 28, Short.MAX_VALUE)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(comboServico, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(comboServico, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(campoValor, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -208,12 +238,16 @@ public class JFrameAgendamento extends javax.swing.JFrame {
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(comboServico, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(campoValor, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(comboFuncionario, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         campoObs.setColumns(20);
@@ -272,7 +306,7 @@ public class JFrameAgendamento extends javax.swing.JFrame {
                         .addComponent(campoHora, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
@@ -280,7 +314,7 @@ public class JFrameAgendamento extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(91, 91, 91))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         abasPanel.addTab("Agendar", jPanel2);
@@ -331,7 +365,7 @@ public class JFrameAgendamento extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 526, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 585, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel15)
                 .addContainerGap())
@@ -396,17 +430,17 @@ public class JFrameAgendamento extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(abasPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 596, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(abasPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 655, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGravar, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 15, Short.MAX_VALUE))
+                .addGap(15, 15, 15))
         );
 
-        setSize(new java.awt.Dimension(980, 738));
+        setSize(new java.awt.Dimension(980, 797));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -424,22 +458,27 @@ public class JFrameAgendamento extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if (comboServico.getSelectedIndex() < 1) {
             JOptionPane.showMessageDialog(this, "Selecione um serviço!", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+        } else if((campoValor.getText() == null || campoValor.getText().equals(new Double(0)))) {
+            JOptionPane.showMessageDialog(this, "Digite o valor!", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
         } else {
             if (comboFuncionario.getSelectedIndex() < 1) {
                 listServicosSelecionados.add(
-                    ServicosAgendamentoModel.builder()
-                    .servico(listServicos.get(comboServico.getSelectedIndex() - 1))
-                    .build());
+                        ServicosAgendamentoModel.builder()
+                                .servico(listServicos.get(comboServico.getSelectedIndex() - 1))
+                                .valor(Mascaras.converteDouble(campoValor.getText()))
+                                .build());
             } else {
                 listServicosSelecionados.add(
-                    ServicosAgendamentoModel.builder()
-                    .servico(listServicos.get(comboServico.getSelectedIndex() - 1))
-                    .funcionario(listFuncionarios.get(comboFuncionario.getSelectedIndex() - 1))
-                    .build());
+                        ServicosAgendamentoModel.builder()
+                                .servico(listServicos.get(comboServico.getSelectedIndex() - 1))
+                                .funcionario(listFuncionarios.get(comboFuncionario.getSelectedIndex() - 1))
+                                .valor(Mascaras.converteDouble(campoValor.getText()))
+                                .build());
             }
         }
         comboServico.setSelectedIndex(0);
         comboFuncionario.setSelectedIndex(0);
+        campoValor.setText(null);
         this.preencherTabelaServico();
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -455,49 +494,53 @@ public class JFrameAgendamento extends javax.swing.JFrame {
 
     private void btnGravarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGravarActionPerformed
         try {
-            this.buildAgendamento();
+            if (comboCliente.getSelectedIndex() < 0 || campoDataHoraAgenda.getDate() == null || campoHora.getText().equals("  :  ")) {
+                JOptionPane.showMessageDialog(this, "Todos os campos com * (asterisco) são obrigatórios", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+            } else {
+                this.buildAgendamento();
 
-            if (codigo != null) {
-                agendamento.setId(codigo);
-                this.repository.alterarAgendamento(agendamento);
-                if (listServicosEdicao != null && !listServicosEdicao.isEmpty()) {
-                    List<ServicosAgendamentoModel> servicosRemovidos = listServicosEdicao.stream().filter(e -> (listServicosSelecionados.stream().filter(d -> (d.getServico().getId().equals(e.getServico().getId())) && d.getFuncionario().getId().equals(e.getFuncionario().getId())).count()) < 1).collect(Collectors.toList());
-                    List<ServicosAgendamentoModel> servicosAdicionados = listServicosSelecionados.stream().filter(e -> (listServicosEdicao.stream().filter(d -> (d.getServico().getId().equals(e.getServico().getId())) && d.getFuncionario().getId().equals(e.getFuncionario().getId())).count()) < 1).collect(Collectors.toList());
+                if (codigo != null) {
+                    agendamento.setId(codigo);
+                    this.repository.alterarAgendamento(agendamento);
+                    if (listServicosEdicao != null && !listServicosEdicao.isEmpty()) {
+                        List<ServicosAgendamentoModel> servicosRemovidos = listServicosEdicao.stream().filter(e -> (listServicosSelecionados.stream().filter(d -> (d.getServico().getId().equals(e.getServico().getId())) && d.getFuncionario().getId().equals(e.getFuncionario().getId())).count()) < 1).collect(Collectors.toList());
+                        List<ServicosAgendamentoModel> servicosAdicionados = listServicosSelecionados.stream().filter(e -> (listServicosEdicao.stream().filter(d -> (d.getServico().getId().equals(e.getServico().getId())) && d.getFuncionario().getId().equals(e.getFuncionario().getId())).count()) < 1).collect(Collectors.toList());
 
-                    servicosRemovidos.forEach(servico -> {
-                        try {
-                            servico.setAgendamento(agendamento);
-                            servicoAgendamentoRepository.delete(servico);
-                        } catch (SQLException ex) {
-                            System.out.println("Remover serviços: " + ex);
-                            Logger.getLogger(JFrameAgendamento.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    });
-                    servicosAdicionados.forEach(servico -> {
-                        try {
-                            servico.setAgendamento(agendamento);
-                            servicoAgendamentoRepository.save(servico);
-                        } catch (SQLException ex) {
-                            System.out.println("Adicionar serviços: " + ex);
-                            Logger.getLogger(JFrameAgendamento.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    });
+                        servicosRemovidos.forEach(servico -> {
+                            try {
+                                servico.setAgendamento(agendamento);
+                                servicoAgendamentoRepository.delete(servico);
+                            } catch (SQLException ex) {
+                                System.out.println("Remover serviços: " + ex);
+                                Logger.getLogger(JFrameAgendamento.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        });
+                        servicosAdicionados.forEach(servico -> {
+                            try {
+                                servico.setAgendamento(agendamento);
+                                servicoAgendamentoRepository.save(servico);
+                            } catch (SQLException ex) {
+                                System.out.println("Adicionar serviços: " + ex);
+                                Logger.getLogger(JFrameAgendamento.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        });
+                    } else {
+                        this.salvarServicos();
+                    }
                 } else {
+                    agendamento = this.repository.agendar(agendamento);
                     this.salvarServicos();
                 }
-            } else {
-                agendamento = this.repository.agendar(agendamento);
-                this.salvarServicos();
+                this.preencheConsulta();
+                btnNovo.setEnabled(true);
+                btnImprimir.setEnabled(true);
+                btnExcluir.setEnabled(true);
+                codigo = agendamento.getId();
+                JOptionPane.showMessageDialog(this, "Atendimento salvo com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
             }
-            this.preencheConsulta();
-            btnNovo.setEnabled(true);
-            btnImprimir.setEnabled(true);
-            btnExcluir.setEnabled(true);
-
-            JOptionPane.showMessageDialog(this, "Agendamento salvo com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
         } catch (HeadlessException | SQLException ex) {
             System.out.println(ex);
-            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar salvar o Cliente", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar salvar o Atendimento", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnGravarActionPerformed
 
@@ -509,14 +552,14 @@ public class JFrameAgendamento extends javax.swing.JFrame {
         Map parametros = new HashMap();
         parametros.put("agendamento", codigo);
         try {
-            new JasperGenerate().gerar("/reports/Recibo.jasper", parametros, "Ficha/Recibo do Agendamento");
+            new JasperGenerate().gerar("/reports/Recibo.jasper", parametros, "Ficha/Recibo do Atendimento");
         } catch (JRException | SQLException | ClassNotFoundException ex) {
             Logger.getLogger(JFrameAgendamento.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnImprimirActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        int dialogResult = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir o agendamento?", "Galera de casa aí, comé que é, meu?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        int dialogResult = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir o atendimento?", "Galera de casa aí, comé que é, meu?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (dialogResult == JOptionPane.YES_OPTION) {
             try {
                 repository.delete(agendamento);
@@ -524,13 +567,30 @@ public class JFrameAgendamento extends javax.swing.JFrame {
                 this.preencheConsulta();
                 listServicosSelecionados = new ArrayList<>();
                 this.preencherTabelaServico();
-                JOptionPane.showMessageDialog(this, "Agendamento excluído com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Atendimento excluído com sucesso!", "Quem sabe faz ao vivo!", JOptionPane.INFORMATION_MESSAGE);
             } catch (SQLException ex) {
                 System.out.println(ex.getMessage());
-                JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar excluir o Agendamento", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Ocorreu um erro ao tentar excluir o Atendimento", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btnExcluirActionPerformed
+
+    private void campoValorFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_campoValorFocusLost
+        try {
+            double valor = Mascaras.converteDouble(campoValor.getText());
+            campoValor.setText(Mascaras.monetario.format(valor));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Valor Inválido!", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+            campoValor.setText("");
+            campoValor.requestFocus();
+        }
+    }//GEN-LAST:event_campoValorFocusLost
+
+    private void comboServicoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboServicoItemStateChanged
+        if(comboServico.getSelectedIndex() > 0){
+            campoValor.setText(listServicos.get(comboServico.getSelectedIndex() - 1).getValor().toString().replace(".", ","));
+        }
+    }//GEN-LAST:event_comboServicoItemStateChanged
 
     private void preencheClientes() {
         ClienteRepository clienteRepository = new ClienteRepository();
@@ -575,10 +635,10 @@ public class JFrameAgendamento extends javax.swing.JFrame {
         DefaultTableModel model = new DefaultTableModel(
                 new Object[][]{},
                 //aqui a construï¿½ao do cabeï¿½alho
-                new String[]{"", "", "", "Serviço", "Funcionáo", "Valor"}) {
+                new String[]{"", "", "", "Serviço", "Funcionário", "Valor"}) {
             Class[] types = new Class[]{
                 //para cada coluna acrescentar mais um construtor
-                    java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class};
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class};
             //para cada coluna acrescentar mais um objetooo...
             boolean[] canEdit = new boolean[]{false, false, false, false, false, false};
 
@@ -593,7 +653,7 @@ public class JFrameAgendamento extends javax.swing.JFrame {
         //construï¿½ao do conteudo da tabela........................
         //usando o BD
         listServicosSelecionados.forEach((servicoSelecionado) -> {
-            model.addRow(new Object[]{servicoSelecionado.getServico().getId(), (servicoSelecionado.getFuncionario() != null ? servicoSelecionado.getFuncionario().getId() : 0), servicoSelecionado.getId(), servicoSelecionado.getServico().getDescricao(), (servicoSelecionado.getFuncionario() != null ? servicoSelecionado.getFuncionario().getNome() : ""), Mascaras.monetario.format(servicoSelecionado.getServico().getValor())});
+            model.addRow(new Object[]{servicoSelecionado.getServico().getId(), (servicoSelecionado.getFuncionario() != null ? servicoSelecionado.getFuncionario().getId() : 0), servicoSelecionado.getId(), servicoSelecionado.getServico().getDescricao(), (servicoSelecionado.getFuncionario() != null ? servicoSelecionado.getFuncionario().getNome() : ""), Mascaras.monetario.format(servicoSelecionado.getValor())});
         });
 
         tabelaServicosAgendamento.setModel(model);
@@ -644,6 +704,7 @@ public class JFrameAgendamento extends javax.swing.JFrame {
         campoDataHoraAgenda.setDate(null);
         campoHora.setText(null);
         campoObs.setText(null);
+        preencherTabelaServico();
     }
 
     private void preencheConsulta() {
@@ -653,7 +714,7 @@ public class JFrameAgendamento extends javax.swing.JFrame {
                 new String[]{"", "Cliente", "Data"}) {
             Class[] types = new Class[]{
                 //para cada coluna acrescentar mais um construtor
-                    java.lang.Object.class, java.lang.Object.class, java.lang.Object.class,};
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class,};
             //para cada coluna acrescentar mais um objetooo...
             boolean[] canEdit = new boolean[]{false, false, false};
 
@@ -666,7 +727,7 @@ public class JFrameAgendamento extends javax.swing.JFrame {
             }
         };
         try {
-            repository.findAllAgendamentosFuturos().forEach((agendamentoUnique) -> {
+            repository.findAllAgendamentos().forEach((agendamentoUnique) -> {
                 model.addRow(new Object[]{agendamentoUnique.getId(), agendamentoUnique.getClienteModel().getNome(), Utils.formatLocalDateTime(agendamentoUnique.getDataHora(), "dd/MM/yyyy HH:mm")});
             });
         } catch (SQLException ex) {
@@ -726,6 +787,13 @@ public class JFrameAgendamento extends javax.swing.JFrame {
             }
         });
     }
+   
+    private void ativarBotoes(boolean estado){
+        btnGravar.setEnabled(estado);
+        btnNovo.setEnabled(estado);
+        btnImprimir.setEnabled(estado);
+        btnExcluir.setEnabled(estado);
+    }
     
     /**
      * @param args the command line arguments
@@ -772,6 +840,7 @@ public class JFrameAgendamento extends javax.swing.JFrame {
     private org.jdesktop.swingx.JXDatePicker campoDataHoraAgenda;
     private javax.swing.JFormattedTextField campoHora;
     private javax.swing.JTextArea campoObs;
+    private javax.swing.JTextField campoValor;
     private javax.swing.JComboBox<String> comboCliente;
     private javax.swing.JComboBox<String> comboFuncionario;
     private javax.swing.JComboBox<String> comboServico;
@@ -784,6 +853,7 @@ public class JFrameAgendamento extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

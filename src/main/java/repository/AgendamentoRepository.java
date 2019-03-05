@@ -61,6 +61,27 @@ public class AgendamentoRepository extends BaseRepository {
         return listAgendamentos;
     }
    
+   public List<AgendamentoModel> findAllAgendamentos() throws SQLException {
+        List<AgendamentoModel> listAgendamentos = new ArrayList<>();
+
+       preparaComandoSql("select a.id, a.id_cliente, a.obs, c.nome, a.data_hora from AGENDAMENTO A INNER JOIN CLIENTE C on a.id_cliente = c.id");
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                AgendamentoModel servico = AgendamentoModel.builder()
+                        .id(rs.getLong("a.id"))
+                        .clienteModel(ClienteModel.builder().id(rs.getLong("a.id_cliente")).nome(rs.getString("c.nome")).build())
+                        .dataHora(Utils.convetTimestampToLocalDateTime(rs.getTimestamp("a.data_hora")))
+                        .obs(rs.getString("a.obs"))
+                        .build();
+                
+                listAgendamentos.add(servico);
+            }
+        }
+        finalizaConexao();
+
+        return listAgendamentos;
+    }
+   
    public AgendamentoModel findOne(AgendamentoModel agendamento) throws SQLException {
        preparaComandoSql("select a.id, a.id_cliente,a.obs, c.nome, a.data_hora from AGENDAMENTO A INNER JOIN CLIENTE C on c.id = a.id_cliente where a.id = ?");
        stmt.setLong(1, agendamento.getId());

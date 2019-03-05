@@ -1,0 +1,1 @@
+ALTER TABLE `servico_agendamento` ADD `valor` DOUBLE NULL AFTER `OBS`;

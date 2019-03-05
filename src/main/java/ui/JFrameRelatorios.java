@@ -210,7 +210,7 @@ public class JFrameRelatorios extends javax.swing.JFrame {
             }
             try {
                 System.out.println(parametros);
-                new JasperGenerate().gerarComConsulta("/reports/Comissao.jasper", parametros, "Relatório de Comissão");
+                new JasperGenerate().gerarComissaoMensal("/reports/Comissao.jasper", parametros, "Relatório de Comissão");
                 dialogComissaoMensal.setVisible(false);
             } catch (JRException | SQLException | ClassNotFoundException ex) {
                 Logger.getLogger(JFrameAgendamento.class.getName()).log(Level.SEVERE, null, ex);

@@ -6,7 +6,7 @@
 	<parameter name="agendamento" class="java.lang.Long"/>
 	<queryString>
 		<![CDATA[select  sa.id_agendamento as agendamento, c.nome as cliente, s.descricao as servico, 
-s.valor as valor, f.nome as funcionario, a.obs as observacao
+if(sa.valor is null, s.valor, sa.valor) as valor, f.nome as funcionario, a.obs as observacao
 from servico_agendamento as sa 
 inner join agendamento as a on a.id = sa.id_agendamento
 inner join cliente as c on c.id = a.id_cliente
@@ -157,7 +157,7 @@ order by s.descricao]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
 					<font size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[ $F{valor}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{valor}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="220" y="0" width="210" height="20" uuid="58452481-f83e-4a29-a839-829623188d31">

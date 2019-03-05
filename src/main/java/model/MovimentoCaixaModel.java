@@ -19,4 +19,5 @@ public class MovimentoCaixaModel {
     String descricao;
     String obs;
     FuncionarioModel funcionario;
+    String formaEntrada;
 }

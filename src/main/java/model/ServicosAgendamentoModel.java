@@ -15,4 +15,5 @@ public class ServicosAgendamentoModel {
     ServicoModel servico;
     FuncionarioModel funcionario;
     String obs;
+    Double valor;
 }

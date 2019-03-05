@@ -5,6 +5,7 @@
  */
 package ui.caixa;
 
+import com.mysql.cj.util.StringUtils;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.logging.Level;
@@ -64,9 +65,12 @@ public class JFrameEntradaCaixa extends javax.swing.JFrame {
         campoValor = new javax.swing.JTextField();
         campoDescricao = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        comboForma = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Entrada de Caixa");
+        setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(255, 204, 255));
 
@@ -77,7 +81,7 @@ public class JFrameEntradaCaixa extends javax.swing.JFrame {
         jLabel5.setBackground(new java.awt.Color(231, 32, 83));
         jLabel5.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel5.setText(" Valor");
+        jLabel5.setText(" Valor*");
         jLabel5.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel5.setOpaque(true);
 
@@ -116,9 +120,18 @@ public class JFrameEntradaCaixa extends javax.swing.JFrame {
         jLabel7.setBackground(new java.awt.Color(231, 32, 83));
         jLabel7.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setText(" Descrição");
+        jLabel7.setText(" Descrição*");
         jLabel7.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jLabel7.setOpaque(true);
+
+        jLabel8.setBackground(new java.awt.Color(231, 32, 83));
+        jLabel8.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText(" Forma de Entrada*");
+        jLabel8.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        jLabel8.setOpaque(true);
+
+        comboForma.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "SELECIONE...", "CARTÃO DE CRÉDITO", "CARTÃO DE DÉBITO", "DINHEIRO" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -128,22 +141,20 @@ public class JFrameEntradaCaixa extends javax.swing.JFrame {
                 .addGap(24, 24, 24)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(btnGravar, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE))
-                                .addGap(18, 18, 18))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(campoValor)
+                            .addComponent(jScrollPane1)
                             .addComponent(campoDescricao)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)
-                            .addComponent(campoValor)))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(25, Short.MAX_VALUE))
+                            .addComponent(comboForma, javax.swing.GroupLayout.PREFERRED_SIZE, 483, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -160,29 +171,37 @@ public class JFrameEntradaCaixa extends javax.swing.JFrame {
                     .addComponent(campoValor, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comboForma, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(28, 28, 28)
                 .addComponent(btnGravar, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(79, 79, 79))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        setSize(new java.awt.Dimension(692, 408));
+        setSize(new java.awt.Dimension(735, 505));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGravarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGravarActionPerformed
+        if(StringUtils.isNullOrEmpty(campoDescricao.getText()) || StringUtils.isNullOrEmpty(campoDescricao.getText())
+                || comboForma.getSelectedIndex() < 1){
+            JOptionPane.showMessageDialog(this, "Todos os campos com * (asterisco) são obrigatórios", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+        }
         int dialogResult = JOptionPane.showConfirmDialog(null, "<html>Deseja realmente realizar essa <b>Entrada</b> no caixa?</html>", "Galera de casa aí, comé que é, meu", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (dialogResult == JOptionPane.YES_OPTION) {
             try {
@@ -202,7 +221,7 @@ public class JFrameEntradaCaixa extends javax.swing.JFrame {
             double valor = Mascaras.converteDouble(campoValor.getText());
             campoValor.setText(Mascaras.monetario.format(valor));
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Valor InvÃ¯Â¿Â½lido!", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Valor Inválido!", "Errrrôôôôôuuuu!", JOptionPane.ERROR_MESSAGE);
             campoValor.setText("");
             campoValor.requestFocus();
         }
@@ -220,6 +239,7 @@ public class JFrameEntradaCaixa extends javax.swing.JFrame {
                 .obs(campoObs.getText())
                 .valor(Mascaras.converteDouble(campoValor.getText()))
                 .descricao(campoDescricao.getText())
+                .formaEntrada(comboForma.getSelectedItem().toString())
                 .build();
     }
 
@@ -228,12 +248,14 @@ public class JFrameEntradaCaixa extends javax.swing.JFrame {
         campoValor.setEnabled(false);
         campoObs.setEnabled(false);
         btnGravar.setEnabled(false);
+        comboForma.setEnabled(false);
     }
 
     private void limparCampos() {
         campoDescricao.setText(null);
         campoValor.setText(null);
         campoObs.setText(null);
+        comboForma.setSelectedIndex(0);
     }
 
     /**
@@ -277,10 +299,12 @@ public class JFrameEntradaCaixa extends javax.swing.JFrame {
     private javax.swing.JTextField campoDescricao;
     private javax.swing.JTextArea campoObs;
     private javax.swing.JTextField campoValor;
+    private javax.swing.JComboBox<String> comboForma;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
